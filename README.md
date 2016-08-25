@@ -1,6 +1,6 @@
 # jutils
 
-[![GitHub release](https://img.shields.io/github/release/alibaba/fastjson.svg)](https://github.com/lvyahui8/jutils/releases)
+[![GitHub release](http://movesun.com/images/svg/jutils.svg)](https://github.com/lvyahui8/jutils/releases)
 
 Java开发常用工具类
 
