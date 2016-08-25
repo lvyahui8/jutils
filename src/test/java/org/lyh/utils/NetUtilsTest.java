@@ -19,4 +19,14 @@ public class NetUtilsTest extends TestCase {
     public void testGetJson() throws Exception {
         System.out.println(NetUtils.getJson("http://movesun.qq.com/test/json",null));
     }
+
+    public void testDownload() throws Exception {
+        NetUtils.download("http://movesun.com/images/svg/jutils.svg","F:/jutils.svg");
+    }
+
+    public void testMultiThreadDownload() throws Exception {
+        NetUtils.multiThreadDownload(
+                "http://movesun.com/uploads/pdf/a-lvyahui-resume-aboutMeV8-4.pdf"
+                ,"F:/jutils.svg");
+    }
 }
