@@ -2,7 +2,7 @@
 
 [![GitHub release](http://movesun.com/images/svg/jutils.svg)](https://github.com/lvyahui8/jutils/releases)
 
-Java开发常用工具类
+Java开发中常用的一些工具类，免去重复造轮子的辛苦
 
 ## 组件类
  * NetUtils
