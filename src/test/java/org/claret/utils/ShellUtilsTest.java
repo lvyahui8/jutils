@@ -1,4 +1,4 @@
-package org.lyh.utils;
+package org.claret.utils;
 
 import junit.framework.TestCase;
 
