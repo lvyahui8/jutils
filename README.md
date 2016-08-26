@@ -21,7 +21,7 @@ Java开发中常用的一些工具类，免去重复造轮子的辛苦
 
 ```xml
 <dependency>
-    <groupId>org.lyh</groupId>
+    <groupId>org.claret</groupId>
     <artifactId>jutils</artifactId>
     <version>1.0</version>
 </dependency>
