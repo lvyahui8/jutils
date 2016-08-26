@@ -2,6 +2,9 @@ package org.lyh.utils;
 
 import junit.framework.TestCase;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  *
  * Created by lvyahui on 2016/8/25.
@@ -17,7 +20,7 @@ public class NetUtilsTest extends TestCase {
     }
 
     public void testGetJson() throws Exception {
-        System.out.println(NetUtils.getJson("http://movesun.qq.com/test/json",null));
+        System.out.println(NetUtils.get("http://movesun.qq.com/test/json",null));
     }
 
     public void testDownload() throws Exception {
@@ -28,5 +31,16 @@ public class NetUtilsTest extends TestCase {
         NetUtils.multiThreadDownload(
                 "http://movesun.com/uploads/pdf/a-lvyahui-resume-aboutMeV8-4.pdf"
                 ,"F:/jutils.svg");
+    }
+
+    public void testGet() throws Exception {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("id",1);
+        params.put("created_at","2016-08-26");
+        NetUtils.get("http://movesun.com/demo/json",params);
+    }
+
+    public void testGet1() throws Exception {
+        NetUtils.get("http://movesun.com/json");
     }
 }

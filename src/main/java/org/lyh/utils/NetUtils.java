@@ -3,12 +3,15 @@ package org.lyh.utils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map;
 
 /**
@@ -70,7 +73,46 @@ public class NetUtils {
         return url.startsWith("http://");
     }
 
-    public static String getJson(String url, Map<String, Object> params) {
+    /**
+     * 发送get请求获取文本响应，适合请求json
+     * @param url 请求地址
+     * @param params 请求参数
+     * @return 响应
+     */
+    public static String get(String url, Map<String, Object> params) {
+        CloseableHttpClient client = HttpClients.createDefault();
+        RequestBuilder requestBuilder = RequestBuilder.get().setUri(url);
+        if(params != null){
+            for (Map.Entry<String,Object> param : params.entrySet()){
+                requestBuilder = requestBuilder.addParameter(param.getKey(), String.valueOf(param.getValue()));
+            }
+        }
+        HttpUriRequest get = requestBuilder.build();
+        try {
+            CloseableHttpResponse response = client.execute(get);
+            if (response.getStatusLine().getStatusCode() == 200){
+                HttpEntity httpEntity = response.getEntity();
+                InputStream inputStream = httpEntity.getContent();
+                StringBuilder sb = new StringBuilder();
+                byte [] buffer = new byte[4096];
+                int len;
+                while((len = inputStream.read(buffer)) > 0){
+                    sb.append(new String(buffer,0,len));
+                }
+                return sb.toString();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return null;
+    }
+
+    /**
+     * 发送get请求获取文本响应，适合请求json
+     * @param url 请求地址
+     * @return 响应
+     */
+    public static String get(String url){
+        return get(url,null);
     }
 }
