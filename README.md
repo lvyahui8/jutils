@@ -1,6 +1,6 @@
 # jutils
 
-[![GitHub release](http://movesun.com/images/svg/jutils.svg)](https://github.com/lvyahui8/jutils/releases)
+[![GitHub release](http://movesun.com/images/svg/jutils.svg?324234)](https://github.com/lvyahui8/jutils/releases)
 
 Java开发中常用的一些工具类，免去重复造轮子的辛苦
 
