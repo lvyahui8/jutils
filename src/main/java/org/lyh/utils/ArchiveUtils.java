@@ -51,8 +51,8 @@ public class ArchiveUtils {
         }
         File zipFile = new File(zipFilePath);
         File pathFile = new File(descDir);
-        if (!pathFile.exists()) {
-            pathFile.mkdirs();
+        if (!pathFile.exists() && !pathFile.mkdirs()) {
+            return ;
         }
         ZipFile zip = new ZipFile(zipFile);
         for (Enumeration entries = zip.getEntries(); entries.hasMoreElements(); ) {

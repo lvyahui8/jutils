@@ -11,6 +11,8 @@ Java开发中常用的一些工具类，免去重复造轮子的辛苦
  * StringUtils
  * MailUtils
  * MathUtils
+ * ArchiveUtils
+ * VideoUtils
  * ...
  
 ## 文档
