@@ -7,6 +7,7 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.claret.component.MultiThreadDownLoader;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -62,6 +63,10 @@ public class NetUtils {
      * @return 下载成功或失败
      */
     public static boolean multiThreadDownload(String url, String saveFile){
+        MultiThreadDownLoader downLoader = new MultiThreadDownLoader(url);
+        downLoader.setFileFullName(saveFile);
+        downLoader.setThreadCount(8);
+        downLoader.start();
         return false;
     }
 

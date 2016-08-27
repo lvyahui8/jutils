@@ -8,4 +8,15 @@ import junit.framework.TestCase;
  */
 public class ShellUtilsTest extends TestCase {
 
+    public void testGetOsType() throws Exception {
+        System.out.println(ShellUtils.getOsType());
+    }
+
+    public void testExecCommand() throws Exception {
+        System.out.println(ShellUtils.execCommand("ls","-lh"));
+    }
+
+    public void testExecCommand1() throws Exception {
+        System.out.println(ShellUtils.execCommand("ls -lh"));
+    }
 }
