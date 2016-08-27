@@ -17,7 +17,8 @@ import java.util.Map;
 
 /**
  * 网络工具
- * Created by lvyahui on 2016/8/25.
+ *
+ * @author lvyahui (lvyahui8@gmail.com,lvyahui8@126.com)
  */
 public class NetUtils {
     /**
@@ -62,10 +63,10 @@ public class NetUtils {
      * @param saveFile 保存的全文件名
      * @return 下载成功或失败
      */
-    public static boolean multiThreadDownload(String url, String saveFile){
+    public static boolean multiThreadDownload(String url, String saveFile,int count){
         MultiThreadDownLoader downLoader = new MultiThreadDownLoader(url);
         downLoader.setFileFullName(saveFile);
-        downLoader.setThreadCount(8);
+        downLoader.setThreadCount(count);
         downLoader.start();
         return false;
     }
