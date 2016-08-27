@@ -13,7 +13,7 @@ public class ShellUtilsTest extends TestCase {
     }
 
     public void testExecCommand() throws Exception {
-        System.out.println(ShellUtils.execCommand("ls","-lh"));
+        System.out.println(ShellUtils.execCommand("dir","/a"));
     }
 
     public void testExecCommand1() throws Exception {
