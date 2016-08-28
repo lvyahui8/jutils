@@ -3,6 +3,8 @@ package org.claret.utils;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 字符串工具类
@@ -11,7 +13,18 @@ import java.security.NoSuchAlgorithmException;
 public class StringUtils {
 
     /**
+     * 蛇形字符串缓存
+     */
+    private static Map<String,String> snakeCache = new HashMap<String,String>();
+
+    /**
+     * 驼峰字符串缓存
+     */
+    private static Map<String,String> humpCache = new HashMap<String,String>();
+
+    /**
      * 首字母小写
+     *
      * @param str 待转字符串
      * @return 首字母小写的字符串
      */
@@ -23,6 +36,7 @@ public class StringUtils {
 
     /**
      * 首字母大写
+     *
      * @param str 待转字符串
      * @return 首字母大写的字符串
      */
@@ -70,5 +84,56 @@ public class StringUtils {
         return success;
     }
 
+    /**
+     * 驼峰转蛇形
+     *
+     * @param str 驼峰字符串
+     * @param delimiter 分隔符
+     * @return 蛇形字符串
+     */
+    public static String humpToSnake(String str,String delimiter){
+        String key = str.concat(delimiter);
+        if(snakeCache.containsKey(key)){
+            return snakeCache.get(key);
+        }
 
+        String replace = "$1".concat(delimiter).concat("$2");
+        str = str.replaceAll("([A-Za-z])([A-Z])",replace).toLowerCase();
+
+        snakeCache.put(key,str);
+        return str;
+    }
+
+
+    /**
+     * 蛇形转驼峰
+     *
+     * @param str 蛇形字符串
+     * @param delimiter 分隔符
+     * @return 驼峰字符串
+     */
+    public static String snakeToHump(String str,String delimiter){
+        String key = str.concat(delimiter);
+        if(humpCache.containsKey(key)){
+            return humpCache.get(key);
+        }
+        str = ucwords(str,delimiter).replaceAll(delimiter,"");
+        humpCache.put(key,str);
+        return str;
+    }
+
+    /**
+     * 将语句中的单词的首字母大写
+     * @param str 空格分隔的英文单词语句
+     * @param delimiter 分隔符
+     * @return 单词首字母大写的串
+     */
+    public static String ucwords(String str,String delimiter){
+        String [] words = str.split(delimiter);
+        StringBuilder ucStr = new StringBuilder();
+        for (String word : words){
+            ucStr.append(ucfirst(word)).append(delimiter);
+        }
+        return ucStr.toString().trim();
+    }
 }

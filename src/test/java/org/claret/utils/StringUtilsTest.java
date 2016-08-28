@@ -29,4 +29,14 @@ public class StringUtilsTest extends TestCase {
     public void testEncodeType() throws Exception {
         System.out.println(StringUtils.encodeType("中文","GBK")); // flase
     }
+
+    public void testHumpToSnake() throws Exception {
+        System.out.println(StringUtils.humpToSnake("StringUtilsTest","-"));
+    }
+
+    public void testSnakeToHump() throws Exception {
+        System.out.println(StringUtils.snakeToHump("string-utils-test","-"));
+    }
+
+
 }

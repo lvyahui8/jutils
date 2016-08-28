@@ -99,6 +99,13 @@ public class ShellUtils {
             System.out.println(errMsg);
         } catch (InterruptedException e) {
             e.printStackTrace();
+        } finally {
+            synchronized (process.getErrorStream()){
+                errReader.close();
+            }
+            synchronized (process.getInputStream()){
+                outReader.close();
+            }
         }
 
         return null;
