@@ -30,6 +30,7 @@ public class ShellUtilsTest extends TestCase {
     }
 
     public void testExecCommandNotWait() throws Exception {
+        // "bash"  "-c" "ping localhost -n 20 >> ~/work/tmp"
         // ShellUtils.execCommandNotWait("telnet","localhost","80");
         // ShellUtils.execCommandNotWait("echo","localhost",">","F:/tmp");
         ShellUtils.execCommandNotWait("ping","localhost","-n","20",">>","F:/tmp");

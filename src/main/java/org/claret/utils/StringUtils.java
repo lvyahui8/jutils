@@ -136,4 +136,17 @@ public class StringUtils {
         }
         return ucStr.toString().trim();
     }
+
+    public static String join(String [] strs,char delimiter){
+        StringBuilder joiner = new StringBuilder();
+        for (int i = 0;i < strs.length ; i++){
+            if(i > 0){
+                joiner.append(delimiter);
+            }
+            if(strs[i] != null){
+                joiner.append(strs[i]);
+            }
+        }
+        return joiner.toString();
+    }
 }

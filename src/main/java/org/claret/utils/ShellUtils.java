@@ -122,9 +122,11 @@ public class ShellUtils {
 
     private static String[] getExecString(String[] cmd) {
         String [] commandParser = getCommandParser();
-        String [] commands = new String [commandParser.length + cmd.length];
+        String [] commands = new String [commandParser.length + 1];
+
         System.arraycopy(commandParser,0,commands,0,commandParser.length);
-        System.arraycopy(cmd,0,commands,commandParser.length,cmd.length);
+        commands[commandParser.length] = StringUtils.join(cmd,' ');
+//        System.arraycopy(cmd,0,commands,commandParser.length,cmd.length);
         return commands;
     }
 
