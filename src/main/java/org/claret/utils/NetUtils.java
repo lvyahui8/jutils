@@ -13,7 +13,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * 网络工具
@@ -120,5 +125,33 @@ public class NetUtils {
      */
     public static String get(String url){
         return get(url,null);
+    }
+
+
+    public static void main(String[] args) {
+        int n = 1000;
+        ExecutorService threadPool = Executors.newFixedThreadPool(n);
+        final CyclicBarrier cb = new CyclicBarrier(n);
+        for (int i = 0 ;i < n * 10; i++){
+            final int taskId = i;
+            threadPool.execute(new Runnable() {
+                public void run() {
+                    Map<String, Object> params = new HashMap<String, Object>();
+                    params.put("p_id",1);
+                    params.put("qua","6.5.0.390");
+                    params.put("uuid","8cadcf2b-a295-4171-95cb-b3348d34ba84");
+                    try {
+                        cb.await();
+                        String resp = NetUtils.get("http://10.151.140.224:8080/apiserver/mapping/check",params);
+//                        System.out.println(Thread.currentThread().getName() + " run taskId:" + taskId + " resp:" +resp);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (BrokenBarrierException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+        threadPool.shutdown();
     }
 }
