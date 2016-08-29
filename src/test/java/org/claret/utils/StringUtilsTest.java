@@ -39,4 +39,13 @@ public class StringUtilsTest extends TestCase {
     }
 
 
+    public void testUcwords() throws Exception {
+        System.out.println(StringUtils.ucwords("string-utils-test","-"));
+        System.out.println(StringUtils.ucwords("i will come back for you!"));
+    }
+
+    public void testJoin() throws Exception {
+        System.out.println(StringUtils.join(new String[] {"i","will","come","back","for","you!"},'*'));
+        System.out.println(StringUtils.join(new Integer[] {1,2,3,4,5}));
+    }
 }

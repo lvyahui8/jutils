@@ -23,11 +23,9 @@ public class ShellUtilsTest extends TestCase {
          * linux
          */
         // System.out.println(ShellUtils.execCommand("head","/var/log/messages","-n", "1"));
-    }
-
-    public void testExecCommand1() throws Exception {
         System.out.println(ShellUtils.execCommand("ls -lh"));
     }
+
 
     public void testExecCommandNotWait() throws Exception {
         // "bash"  "-c" "ping localhost -n 20 >> ~/work/tmp"

@@ -122,6 +122,9 @@ public class StringUtils {
         return str;
     }
 
+    public static String ucwords(String str){
+        return ucwords(str," ");
+    }
     /**
      * 将语句中的单词的首字母大写
      * @param str 空格分隔的英文单词语句
@@ -137,7 +140,10 @@ public class StringUtils {
         return ucStr.toString().trim();
     }
 
-    public static String join(String [] strs,char delimiter){
+    public static String join(Object [] strs){
+        return join(strs,',');
+    }
+    public static String join(Object [] strs,char delimiter){
         StringBuilder joiner = new StringBuilder();
         for (int i = 0;i < strs.length ; i++){
             if(i > 0){

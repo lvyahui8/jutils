@@ -55,6 +55,16 @@ public class ShellUtils {
     /**
      * 执行一条命令
      *
+     * @param cmd 命令
+     * @return 标准输出
+     */
+    public static String execCommand(final String cmd) {
+        return null;
+    }
+
+    /**
+     * 执行一条命令
+     *
      * @param cmd 命令分组
      * @return 标准输出
      */
@@ -95,8 +105,6 @@ public class ShellUtils {
             if(exitCode != 0){
                 // 执行出错
             }
-            System.out.println(outMsg);
-            System.out.println(errMsg);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
@@ -108,9 +116,13 @@ public class ShellUtils {
             }
         }
 
-        return null;
+        return outMsg.toString();
     }
 
+    /**
+     * 执行命令，不关心结果，不等待
+     * @param cmd 命令
+     */
     public static void execCommandNotWait(String ... cmd){
         ProcessBuilder builder = new ProcessBuilder(getExecString(cmd));
         try {
@@ -130,16 +142,6 @@ public class ShellUtils {
         return commands;
     }
 
-    /**
-     * 执行一条命令
-     *
-     * @param cmd 命令
-     * @return 标准输出
-     */
-    public static String execCommand(final String cmd) {
-
-        return null;
-    }
 
 
     @SuppressWarnings("unused")
