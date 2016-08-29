@@ -111,6 +111,15 @@ public class ShellUtils {
         return null;
     }
 
+    public static void execCommandNotWait(String ... cmd){
+        ProcessBuilder builder = new ProcessBuilder(getExecString(cmd));
+        try {
+            builder.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private static String[] getExecString(String[] cmd) {
         String [] commandParser = getCommandParser();
         String [] commands = new String [commandParser.length + cmd.length];

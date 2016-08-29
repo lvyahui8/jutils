@@ -132,17 +132,18 @@ public class NetUtils {
         int n = 1000;
         ExecutorService threadPool = Executors.newFixedThreadPool(n);
         final CyclicBarrier cb = new CyclicBarrier(n);
+        final Map<String, Object> params = new HashMap<String, Object>();
+        params.put("p_id",1);
+        params.put("qua","6.5.0.390");
+        params.put("uuid","8cadcf2b-a295-4171-95cb-b3348d34ba84");
+
         for (int i = 0 ;i < n * 10; i++){
             final int taskId = i;
             threadPool.execute(new Runnable() {
                 public void run() {
-                    Map<String, Object> params = new HashMap<String, Object>();
-                    params.put("p_id",1);
-                    params.put("qua","6.5.0.390");
-                    params.put("uuid","8cadcf2b-a295-4171-95cb-b3348d34ba84");
                     try {
                         cb.await();
-                        String resp = NetUtils.get("http://movesun.com/apiserver/mapping/check",params);
+                        String resp = NetUtils.get("http://10.151.140.224:8080/apiserver/mapping/check",params);
 //                        System.out.println(Thread.currentThread().getName() + " run taskId:" + taskId + " resp:" +resp);
                     } catch (InterruptedException e) {
                         e.printStackTrace();

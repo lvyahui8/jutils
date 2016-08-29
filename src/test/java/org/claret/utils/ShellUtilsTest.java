@@ -13,10 +13,27 @@ public class ShellUtilsTest extends TestCase {
     }
 
     public void testExecCommand() throws Exception {
-        System.out.println(ShellUtils.execCommand("dir","/a"));
+        /*
+         * windows
+         */
+        // System.out.println(ShellUtils.execCommand("fsutil","fsinfo","drives"));
+        System.out.println(ShellUtils.execCommand("telnet","localhost","80"));
+
+        /*
+         * linux
+         */
+        // System.out.println(ShellUtils.execCommand("head","/var/log/messages","-n", "1"));
     }
 
     public void testExecCommand1() throws Exception {
         System.out.println(ShellUtils.execCommand("ls -lh"));
+    }
+
+    public void testExecCommandNotWait() throws Exception {
+        // ShellUtils.execCommandNotWait("telnet","localhost","80");
+        // ShellUtils.execCommandNotWait("echo","localhost",">","F:/tmp");
+        ShellUtils.execCommandNotWait("ping","localhost","-n","20",">>","F:/tmp");
+        ShellUtils.execCommandNotWait("echo","localhost",">>","F:/tmp");
+        System.out.println("不等待");
     }
 }
