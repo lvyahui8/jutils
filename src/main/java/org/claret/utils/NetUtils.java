@@ -25,7 +25,7 @@ import java.util.concurrent.Executors;
  *
  * @author lvyahui (lvyahui8@gmail.com,lvyahui8@126.com)
  */
-public class NetUtils {
+public class NetUtils extends Utils {
     /**
      * 下载文件
      * @param url 文件地址

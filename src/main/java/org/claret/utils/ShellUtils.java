@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
  * Console工具类
  * Created by lvyahui on 2016/8/26.
  */
-public class ShellUtils {
+public class ShellUtils extends Utils {
 
     public enum OSType {
         WINDOWS, LINUX, MAC, FREEBSD, OTHER;

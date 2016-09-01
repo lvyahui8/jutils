@@ -8,7 +8,7 @@ import java.io.IOException;
  * 暂时是linux版本
  * Created by lvyahui on 2016/8/26.
  */
-public class VideoUtils {
+public class VideoUtils extends Utils {
     public static final String FFMPEG_EXECUTOR = "ffmpeg";
 
     public static boolean extractThumbnail(File inputFile,String thumbnailOutput,int width ,int height){

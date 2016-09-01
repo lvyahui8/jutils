@@ -10,7 +10,7 @@ import java.util.Map;
  * 字符串工具类
  * Created by lvyahui on 2016/8/26.
  */
-public class StringUtils {
+public class StringUtils extends Utils {
 
     /**
      * 蛇形字符串缓存
