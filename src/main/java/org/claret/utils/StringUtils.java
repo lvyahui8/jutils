@@ -125,6 +125,7 @@ public class StringUtils extends Utils {
     public static String ucwords(String str){
         return ucwords(str," ");
     }
+
     /**
      * 将语句中的单词的首字母大写
      * @param str 空格分隔的英文单词语句
@@ -143,6 +144,7 @@ public class StringUtils extends Utils {
     public static String join(Object [] strs){
         return join(strs,',');
     }
+
     public static String join(Object [] strs,char delimiter){
         StringBuilder joiner = new StringBuilder();
         for (int i = 0;i < strs.length ; i++){
@@ -154,5 +156,45 @@ public class StringUtils extends Utils {
             }
         }
         return joiner.toString();
+    }
+
+    public static boolean isEmpty(CharSequence sequence){
+        return sequence != null && sequence.length() == 0;
+    }
+
+    public static boolean equeals(CharSequence str1,CharSequence str2){
+        return str1 == null ? str2 == null : str1.equals(str2);
+    }
+
+    public static boolean isUpperCase(CharSequence cs){
+        return each(cs, new Comparable<Character>() {
+            public int compareTo(Character o) {
+                return Character.isUpperCase(o) ? 1 : 0;
+            }
+        });
+    }
+
+    public static boolean isLowerCase(CharSequence cs){
+        return each(cs, new Comparable<Character>() {
+            public int compareTo(Character o) {
+                return Character.isLowerCase(o) ? 1 : 0;
+            }
+        });
+    }
+
+    public static boolean each(CharSequence cs, Comparable<Character> comparable){
+        if(comparable == null){
+            return false;
+        }
+        if(cs != null && cs.length() != 0){
+            for (int i = 0; i < cs.length(); i++){
+                if(comparable.compareTo(cs.charAt(i)) == 0){
+                    return false;
+                }
+            }
+            return true;
+        }else{
+            return false;
+        }
     }
 }

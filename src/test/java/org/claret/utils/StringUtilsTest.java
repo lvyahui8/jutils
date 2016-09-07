@@ -48,4 +48,20 @@ public class StringUtilsTest extends TestCase {
         System.out.println(StringUtils.join(new String[] {"i","will","come","back","for","you!"},'*'));
         System.out.println(StringUtils.join(new Integer[] {1,2,3,4,5}));
     }
+
+    public void testIsEmpty() throws Exception {
+        System.out.println(StringUtils.isEmpty(""));
+    }
+
+    public void testEqueals() throws Exception {
+        System.out.println(StringUtils.equeals("lvyahui","samlv"));
+    }
+
+    public void testIsUpperCase() throws Exception {
+        System.out.println(StringUtils.isUpperCase("lvyahuI"));
+    }
+
+    public void testIsLowerCase() throws Exception {
+        System.out.println(StringUtils.isLowerCase("LVYAHUI"));
+    }
 }
