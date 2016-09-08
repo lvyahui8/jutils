@@ -20,4 +20,12 @@ public class IOUtilsTest extends TestCase {
         System.out.println(IOUtils.getClassPath());
     }
 
+    public void testCopy() throws Exception {
+        IOUtils.copy("E:/www/ruochen/trunk/uploads/pdf/a-lvyahui-resume-aboutMeV8-4.pdf","F:/tmp/resume.pdf",false);
+        IOUtils.copy("E:/www/ruochen/trunk/uploads/pdf/a-lvyahui-resume-aboutMeV8-4.pdf","F:/tmp/resume.pdf");
+        IOUtils.copy("C:/soft/QQSnapShot.exe","F:/tmp",false);
+        IOUtils.copy("C:/soft/QQSnapShot.exe","F:/tmp");
+        IOUtils.copy("C:/soft/apache-maven-3.3.9/bin","F:/tmp/maven",false);
+        IOUtils.copy("C:/soft/apache-maven-3.3.9/bin","F:/tmp/maven");
+    }
 }
