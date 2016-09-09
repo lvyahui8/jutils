@@ -16,8 +16,7 @@ public class YamlConfig extends Config {
     public boolean load(InputStream confFileStream) throws IOException {
         Yaml yaml = new Yaml(new SafeConstructor());
         Map ret = (Map) yaml.load(new InputStreamReader(confFileStream));
-        initMap();
-        this.confs.putAll(ret);
+        this.putAll(ret);
         return false;
     }
 }

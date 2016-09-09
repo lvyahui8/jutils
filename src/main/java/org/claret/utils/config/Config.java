@@ -3,12 +3,11 @@ package org.claret.utils.config;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author samlv
  */
-public abstract class Config {
+public abstract class Config extends HashMap<String,Object>{
     public enum Type {
         JSON(".json"), XML(".xml"), YAML(".yaml"), PROPERTIES(".properties");
 
@@ -24,28 +23,10 @@ public abstract class Config {
         }
     }
 
-    protected Map<String, Object> confs;
+    public Object get(String key, Object defaultValue) {
+        return this.containsKey(key) ? this.get(key) : defaultValue;
+    }
 
     public abstract boolean load(InputStream confFileStream) throws IOException;
 
-    protected void initMap(){
-        if(this.confs == null){
-            confs = new HashMap<String, Object>();
-        }else{
-            confs.clear();
-        }
-    }
-
-
-    public Map<String, Object> getConfs() {
-        return confs;
-    }
-
-    public Object get(String key) {
-        return confs.get(key);
-    }
-
-    public Object get(String key, Object defaultValue) {
-        return confs.containsKey(key) ? confs.get(key) : defaultValue;
-    }
 }

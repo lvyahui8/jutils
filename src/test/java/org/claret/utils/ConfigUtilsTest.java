@@ -10,6 +10,6 @@ public class ConfigUtilsTest extends TestCase {
 
     public void testLoad() throws Exception {
         Config config = ConfigUtils.load("config.properties");
-        System.out.println(config.getConfs());
+        System.out.println(config);
     }
 }

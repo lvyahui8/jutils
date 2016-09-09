@@ -141,7 +141,7 @@ public class IOUtils extends Utils {
                 /*
                  *  目标必定不存在，并且目标一定是文件，但目录可能存在
                  *  比如cp /etc/profile ~/bak/profile
-                 *  如果~/bak/profile不存在，可能~/bak/profile存在
+                 *  如果~/bak/profile不存在，可能~/bak存在
                  */
                 String filePath = destFile.getParentFile().getAbsolutePath();
                 File dirFile = new File(filePath);
