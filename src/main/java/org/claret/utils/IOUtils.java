@@ -111,7 +111,6 @@ public class IOUtils extends Utils {
         if (!sourceFile.exists() || !sourceFile.canRead()) {
             throw new FileNotFoundException(sourceFile.getName());
         }
-
         // 处理source是文件的情况
         if (sourceFile.isFile()) {
             if (destFile.exists()) {
@@ -122,19 +121,59 @@ public class IOUtils extends Utils {
                 if (destFile.isDirectory()) {
                     // 看这个目录下有没有这个文件存在
                     File existFile = new File(destFile.getAbsolutePath() + "/" + sourceFile.getName());
-                    if (existFile.exists() && !override) {
+                    if (existFile.exists()) {
+                        if(!override){
+                            throw new FileAlreadyExistsException(destFile.getName());
+                        }
+                    }else{
+                        if(!existFile.createNewFile()){
+                            throw new IOException("No write permissions");
+                        }
+                    }
+                    destFile = existFile;
+                }else{
+                    // 目标文件是一个已经存在的文件
+                    if (!override) {
                         throw new FileAlreadyExistsException(destFile.getName());
                     }
-                } else if (!override) {
-                    throw new FileAlreadyExistsException(destFile.getName());
                 }
             } else {
-                // 目标文件必定不存在，但目录可能存在
+                /*
+                 *  目标必定不存在，并且目标一定是文件，但目录可能存在
+                 *  比如cp /etc/profile ~/bak/profile
+                 *  如果~/bak/profile不存在，可能~/bak/profile存在
+                 */
                 String filePath = destFile.getParentFile().getAbsolutePath();
                 File dirFile = new File(filePath);
                 if ((!dirFile.exists() && !dirFile.mkdirs()) || !destFile.createNewFile()) {
                     throw new IOException("No write permissions");
                 }
+            }
+            // 进行文件拷贝
+            copyFile(sourceFile,destFile,override);
+        } else {
+            /*
+             * 源文件是一个目录，那么目标文件必定也是一个目录
+             */
+            if(destFile.exists()){
+                if(!destFile.isDirectory()){
+                    throw new IOException(destFile.getName() + " not a directory");
+                }
+            }else{
+                if(!destFile.mkdirs()){
+                    throw new IOException("No write permissions");
+                }
+            }
+
+            File files [] = sourceFile.listFiles();
+            for (File item : files){
+                if(item.isDirectory()
+                        && (".".equals(item.getName()) || "..".equals(item.getName()))){
+                    continue;
+                }
+                File toFile = new File(destFile,item.getName());
+                // 递归调用本方法
+                copy(item,toFile,override);
             }
         }
         return true;
