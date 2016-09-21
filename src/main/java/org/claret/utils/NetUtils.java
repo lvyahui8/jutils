@@ -9,10 +9,9 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.claret.component.MultiThreadDownLoader;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.BrokenBarrierException;
@@ -127,6 +126,52 @@ public class NetUtils extends Utils {
         return get(url,null);
     }
 
+    public static String post(String url, Map<String,Object> params){
+        PrintWriter out = null;
+        InputStream inputStream = null;
+        try {
+            URL u = new URL(url);
+            URLConnection conn = u.openConnection();
+            conn.setDoInput(true);
+            conn.setDoOutput(true);
+            out = new PrintWriter(conn.getOutputStream(),true);
+            out.print(buildParams(params));
+            inputStream = conn.getInputStream();
+            StringBuilder respBuilder = new StringBuilder();
+            byte [] buffer = new byte[4096];
+            int len;
+            while((len = inputStream.read(buffer)) > 0){
+                respBuilder.append(new String(buffer,0,len));
+            }
+            return respBuilder.toString();
+        }catch (IOException e) {
+            return null;
+        } finally {
+            if(out != null){
+                out.close();
+            }
+            if(inputStream != null){
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    logger.error("close io error " + e.getMessage());
+                }
+            }
+        }
+    }
+
+    public static String buildParams(Map<String,Object> params){
+        StringBuilder sb = new StringBuilder();
+        int i = 0;
+        for (Map.Entry<String,Object> param : params.entrySet()){
+            if(i > 0 ){
+                sb.append('&');
+            }
+            sb.append(param.getKey()).append('=').append(param.getValue());
+            i++;
+        }
+        return sb.toString();
+    }
 
     public static void main(String[] args) {
         int n = 1000;

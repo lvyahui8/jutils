@@ -45,4 +45,14 @@ public class NetUtilsTest extends TestCase {
         String json = NetUtils.get("http://movesun.com/demo/json");
         System.out.println(json);
     }
+
+    public void testPost() throws Exception {
+        Map<String,Object> params = new HashMap<String, Object>();
+
+        System.out.println(NetUtils.post("http://movesun.com/demo/json",params));
+    }
+
+    public void testBuildParams() throws Exception {
+
+    }
 }

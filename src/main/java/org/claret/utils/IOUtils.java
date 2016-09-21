@@ -166,14 +166,16 @@ public class IOUtils extends Utils {
             }
 
             File files [] = sourceFile.listFiles();
-            for (File item : files){
-                if(item.isDirectory()
-                        && (".".equals(item.getName()) || "..".equals(item.getName()))){
-                    continue;
+            if(files != null){
+                for (File item : files){
+                    if(item.isDirectory()
+                            && (".".equals(item.getName()) || "..".equals(item.getName()))){
+                        continue;
+                    }
+                    File toFile = new File(destFile,item.getName());
+                    // 递归调用本方法
+                    copy(item,toFile,override);
                 }
-                File toFile = new File(destFile,item.getName());
-                // 递归调用本方法
-                copy(item,toFile,override);
             }
         }
         return true;
@@ -193,5 +195,9 @@ public class IOUtils extends Utils {
         return true;
     }
 
+    public static boolean exists(String fileName){
+        File file = new File(fileName);
+        return file.exists();
+    }
 
 }
