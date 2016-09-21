@@ -3,21 +3,15 @@ package org.claret.utils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.claret.component.MultiThreadDownLoader;
 
 import java.io.*;
+import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
-import java.util.HashMap;
+import java.net.URLEncoder;
 import java.util.Map;
-import java.util.concurrent.BrokenBarrierException;
-import java.util.concurrent.CyclicBarrier;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * 网络工具
@@ -25,6 +19,10 @@ import java.util.concurrent.Executors;
  * @author lvyahui (lvyahui8@gmail.com,lvyahui8@126.com)
  */
 public class NetUtils extends Utils {
+
+    public static final String  DEFAULT_ENCODE  =   "UTF-8";
+    public static final int     BUFFER_SIZE     =   4096;
+
     /**
      * 下载文件
      * @param url 文件地址
@@ -86,35 +84,28 @@ public class NetUtils extends Utils {
     /**
      * 发送get请求获取文本响应，适合请求json
      * @param url 请求地址
-     * @param params 请求参数
      * @return 响应
      */
     public static String get(String url, Map<String, Object> params) {
-        CloseableHttpClient client = HttpClients.createDefault();
-        RequestBuilder requestBuilder = RequestBuilder.get().setUri(url);
+        return get(url,params,false);
+    }
+
+    private static String get(String url, Map<String, Object> params, boolean encode) {
+        return get(url,params,encode,DEFAULT_ENCODE);
+    }
+
+    public static String get(String url, Map<String, Object> params,boolean encode,String charset){
         if(params != null){
-            for (Map.Entry<String,Object> param : params.entrySet()){
-                requestBuilder = requestBuilder.addParameter(param.getKey(), String.valueOf(param.getValue()));
+            url = url.concat("?").concat(buildParams(params));
+        }
+        if(encode){
+            try {
+                url = URLEncoder.encode(url,charset);
+            } catch (UnsupportedEncodingException e) {
+                return null;
             }
         }
-        HttpUriRequest get = requestBuilder.build();
-        try {
-            CloseableHttpResponse response = client.execute(get);
-            if (response.getStatusLine().getStatusCode() == 200){
-                HttpEntity httpEntity = response.getEntity();
-                InputStream inputStream = httpEntity.getContent();
-                StringBuilder sb = new StringBuilder();
-                byte [] buffer = new byte[4096];
-                int len;
-                while((len = inputStream.read(buffer)) > 0){
-                    sb.append(new String(buffer,0,len));
-                }
-                return sb.toString();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return get(url);
     }
 
     /**
@@ -122,42 +113,75 @@ public class NetUtils extends Utils {
      * @param url 请求地址
      * @return 响应
      */
-    public static String get(String url){
-        return get(url,null);
+    public static String get(String url) {
+        InputStream inputStream = null;
+        HttpURLConnection conn = null;
+        try {
+            URL u = new URL(url);
+            conn = (HttpURLConnection) u.openConnection();
+            conn.connect();
+
+            if(conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                inputStream = conn.getInputStream();
+                return readContent(inputStream);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (conn != null){
+                conn.disconnect();
+            }
+            closeStream(inputStream);
+        }
+        return null;
     }
 
     public static String post(String url, Map<String,Object> params){
+        return post(url,params,false);
+    }
+
+    public static String post(String url, Map<String,Object> params,boolean encode){
+        return post(url,params,encode,DEFAULT_ENCODE);
+    }
+
+    public static String post(String url, Map<String,Object> params,boolean encode,String charset){
+        String buildParams = buildParams(params);
+        if(encode){
+            try {
+                buildParams = URLEncoder.encode(buildParams,charset);
+            } catch (UnsupportedEncodingException e) {
+                return null;
+            }
+        }
+        return post(url,buildParams);
+    }
+
+    public static String post(String url, String buildParams){
         PrintWriter out = null;
         InputStream inputStream = null;
+        HttpURLConnection conn = null;
         try {
             URL u = new URL(url);
-            URLConnection conn = u.openConnection();
+            conn = (HttpURLConnection) u.openConnection();
             conn.setDoInput(true);
             conn.setDoOutput(true);
             out = new PrintWriter(conn.getOutputStream(),true);
-            out.print(buildParams(params));
-            inputStream = conn.getInputStream();
-            StringBuilder respBuilder = new StringBuilder();
-            byte [] buffer = new byte[4096];
-            int len;
-            while((len = inputStream.read(buffer)) > 0){
-                respBuilder.append(new String(buffer,0,len));
+            out.print(buildParams);
+
+            if(conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                inputStream = conn.getInputStream();
+                return readContent(inputStream);
             }
-            return respBuilder.toString();
         }catch (IOException e) {
             return null;
         } finally {
-            if(out != null){
-                out.close();
-            }
-            if(inputStream != null){
-                try {
-                    inputStream.close();
-                } catch (IOException e) {
-                    logger.error("close io error " + e.getMessage());
-                }
+            closeStream(out);
+            closeStream(inputStream);
+            if (conn != null){
+                conn.disconnect();
             }
         }
+        return null;
     }
 
     public static String buildParams(Map<String,Object> params){
@@ -173,31 +197,24 @@ public class NetUtils extends Utils {
         return sb.toString();
     }
 
-    public static void main(String[] args) {
-        int n = 1000;
-        ExecutorService threadPool = Executors.newFixedThreadPool(n);
-        final CyclicBarrier cb = new CyclicBarrier(n);
-        final Map<String, Object> params = new HashMap<String, Object>();
-        params.put("p_id",1);
-        params.put("qua","6.5.0.390");
-        params.put("uuid","8cadcf2b-a295-4171-95cb-b3348d34ba84");
-
-        for (int i = 0 ;i < n * 10; i++){
-            final int taskId = i;
-            threadPool.execute(new Runnable() {
-                public void run() {
-                    try {
-                        cb.await();
-                        String resp = NetUtils.get("http://10.151.140.224:8080/apiserver/mapping/check",params);
-//                        System.out.println(Thread.currentThread().getName() + " run taskId:" + taskId + " resp:" +resp);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (BrokenBarrierException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
+    private static String readContent(InputStream inputStream) throws IOException{
+        StringBuilder sb = new StringBuilder();
+        byte [] buffer = new byte[BUFFER_SIZE];
+        int len;
+        while((len = inputStream.read(buffer)) > 0){
+            sb.append(new String(buffer,0,len));
         }
-        threadPool.shutdown();
+        return sb.toString();
     }
+
+    public static void closeStream(Closeable stream){
+        if(stream != null){
+            try {
+                stream.close();
+            } catch (IOException e) {
+                throw new RuntimeException("unable to close stream " + stream.toString());
+            }
+        }
+    }
+
 }
