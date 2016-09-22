@@ -23,10 +23,6 @@ public class NetUtilsTest extends TestCase {
 
     }
 
-    public void testGetJson() throws Exception {
-        System.out.println(NetUtils.get("http://movesun.qq.com/test/json",null));
-    }
-
     public void testDownload() throws Exception {
         NetUtils.download("http://movesun.com/images/svg/jutils.svg","F:/jutils.svg");
     }
