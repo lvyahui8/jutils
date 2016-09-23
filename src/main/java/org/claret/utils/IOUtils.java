@@ -193,5 +193,7 @@ public class IOUtils extends Utils {
         return true;
     }
 
-
+    protected static boolean move(File sourceFile,File destFile , boolean override) {
+        return !(destFile.exists() && !override) && sourceFile.renameTo(destFile);
+    }
 }
