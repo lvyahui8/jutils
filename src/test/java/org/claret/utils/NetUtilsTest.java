@@ -82,6 +82,11 @@ public class NetUtilsTest extends TestCase {
     }
 
     public void testBuildParams() throws Exception {
-
+        System.out.println(System.currentTimeMillis());
+        // 1474532346948
+        // 1474530587563
+        StringBuilder bodyBuild = new StringBuilder("lvyahui");
+        bodyBuild.deleteCharAt(bodyBuild.length() - 1);
+        System.out.println(bodyBuild.toString());
     }
 }
