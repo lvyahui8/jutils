@@ -47,6 +47,17 @@ public class IOUtils extends Utils {
         return cPath;
     }
 
+    public static InputStream getFileAsStream(String fileName) throws FileNotFoundException {
+        File file = new File(fileName);
+        InputStream stream;
+        if(file.exists()){
+            stream = new FileInputStream(fileName);
+        }else{
+            stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName);
+        }
+        return stream;
+    }
+
     /**
      * 获取指定磁盘序列号
      *
@@ -193,6 +204,33 @@ public class IOUtils extends Utils {
         return true;
     }
 
+    public static boolean exists(String fileName){
+        File file = new File(fileName);
+        return file.exists();
+    }
+
+    public static boolean removePath(String pathName){
+        File path = new File(pathName);
+        if(path.isDirectory()){
+            File files [] = path.listFiles();
+            if(files != null){
+                for (File item : files){
+                    if(item.isDirectory()){
+                        if((".".equals(item.getName()) || "..".equals(item.getName()))){
+                            continue;
+                        }
+                        removePath(item.getAbsolutePath());
+                        item.deleteOnExit();
+                    } else {
+                        item.deleteOnExit();
+                    }
+                    // 递归调用本方法
+                }
+            }
+        }
+        path.deleteOnExit();
+        return true;
+    }
     protected static boolean move(File sourceFile,File destFile , boolean override) {
         return !(destFile.exists() && !override) && sourceFile.renameTo(destFile);
     }

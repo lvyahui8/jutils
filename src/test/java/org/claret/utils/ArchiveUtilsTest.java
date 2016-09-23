@@ -19,7 +19,7 @@ public class ArchiveUtilsTest extends TestCase {
     }
 
     public void testUnZipFiles() throws Exception {
-        ArchiveUtils.unZipFiles("D:\\test\\zip123456.zip","D:\\test\\1\\");
+        // ArchiveUtils.unZipFiles("D:\\test\\zip123456.zip","D:\\test\\1\\");
     }
 
 }

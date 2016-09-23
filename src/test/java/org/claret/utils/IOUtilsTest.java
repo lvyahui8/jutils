@@ -38,4 +38,8 @@ public class IOUtilsTest extends TestCase {
         // IOUtils.copy("C:/Windows/System32/drivers/UMDF","C:/tmp/UMDF");
 
     }
+
+    public void testRemovePath() throws Exception {
+        IOUtils.removePath("D:\\tmp");
+    }
 }

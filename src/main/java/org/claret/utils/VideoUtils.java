@@ -19,7 +19,7 @@ public class VideoUtils extends Utils {
         command.append(" -i ");
         command.append(inputFile.getAbsolutePath());
         command.append(" -y -f image2 -ss 10 -t 0.001 -s ");
-        command.append(width+"*"+height+" ");
+        command.append(width).append("*").append(height).append(" ");
         command.append(thumbnailOutput);
         String cmd = command.toString();
         return runProccess(cmd);

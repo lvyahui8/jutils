@@ -2,6 +2,9 @@ package org.claret.utils;
 
 import junit.framework.TestCase;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * Created by lvyahui on 2016/8/26.
@@ -63,5 +66,13 @@ public class StringUtilsTest extends TestCase {
 
     public void testIsLowerCase() throws Exception {
         System.out.println(StringUtils.isLowerCase("LVYAHUI"));
+    }
+
+    public void testConvParams() throws Exception {
+        List<String> params = new ArrayList<String>();
+        params.add("name=\"lv yahui\"");
+        params.add("pfx=/usr/local");
+        params.add("-f");
+        System.out.println(StringUtils.convParams(params));
     }
 }

@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -196,5 +197,18 @@ public class StringUtils extends Utils {
         }else{
             return false;
         }
+    }
+
+    public static Map<String,Object> convParams(List<String> params){
+        Map<String,Object> paramMap = new HashMap<String, Object>();
+        for (String param : params){
+            String comps [] = param.split("=");
+            if(comps.length > 1){
+                paramMap.put(comps[0],comps[1]);
+            }else{
+                paramMap.put(comps[0],true);
+            }
+        }
+        return paramMap;
     }
 }

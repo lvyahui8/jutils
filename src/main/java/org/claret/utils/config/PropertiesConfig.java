@@ -11,12 +11,11 @@ import java.util.Properties;
 public class PropertiesConfig extends Config {
     @Override
     public boolean load(InputStream confFileStream) throws IOException{
-        initMap();
         Properties properties = new Properties();
         properties.load(confFileStream);
         for (Enumeration props = properties.propertyNames(); props.hasMoreElements(); ) {
             String prop = (String) props.nextElement();
-            confs.put(prop, properties.getProperty(prop));
+            this.put(prop, properties.getProperty(prop));
         }
         return true;
     }

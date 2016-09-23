@@ -72,6 +72,7 @@ public class ArchiveUtils extends Utils {
             in.close();
             out.close();
         }
+        zip.close();
         if (deleteZip) {
             zipFile.delete();
         }
