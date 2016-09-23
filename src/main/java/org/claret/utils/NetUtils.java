@@ -187,12 +187,14 @@ public class NetUtils extends Utils {
     public static String buildParams(Map<String,Object> params){
         StringBuilder sb = new StringBuilder();
         int i = 0;
-        for (Map.Entry<String,Object> param : params.entrySet()){
-            if(i > 0 ){
-                sb.append('&');
+        if(params != null){
+            for (Map.Entry<String,Object> param : params.entrySet()){
+                if(i > 0 ){
+                    sb.append('&');
+                }
+                sb.append(param.getKey()).append('=').append(param.getValue());
+                i++;
             }
-            sb.append(param.getKey()).append('=').append(param.getValue());
-            i++;
         }
         return sb.toString();
     }
