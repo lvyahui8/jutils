@@ -6,12 +6,15 @@ import java.nio.file.FileAlreadyExistsException;
 
 /**
  * IO工具，提供批量建目录，删除文件，递归删除目录等等操作
+ *
+ * File.renameTo 方法自不同平台常常会失败，比如移动之后文件还在，目标文件也生成了，但大小为0。
+ * 所以添加先通过复制再删除的方式删除文件的方法
  * Created by lvyahui on 2016/8/26.
  */
 @SuppressWarnings("unused")
 public class IOUtils extends Utils {
     public static final String SYS_FILE_SP = System.getProperty("file.separator");
-
+    public static final int COPY_BUFFER_SIZE = 4 * 1024 * 1024;
 
     /**
      * 获取运行时目录
@@ -45,6 +48,14 @@ public class IOUtils extends Utils {
             }
         }
         return cPath;
+    }
+
+    public static String getUserHome(){
+        return System.getProperty("user.home");
+    }
+
+    public static String getTmpPath(){
+        return System.getProperty("java.io.tmpdir");
     }
 
     public static InputStream getFileAsStream(String fileName) throws FileNotFoundException {
@@ -92,36 +103,21 @@ public class IOUtils extends Utils {
         return result.trim();
     }
 
-    /*
-    * 复制，几种场景
-    * cp file file
-    * cp file dir
-    * cp dir dir
-    * */
-
-    public static boolean copy(String source, String destination) throws IOException {
-        return copy(source, destination, true);
-    }
-
     /**
-     * @param source      源文件
-     * @param destination 目标文件
-     * @param override    是否覆盖
+     *  复制文件需要考虑这三种场景
+     *  file    ->  file
+     *  file    ->  dir
+     *  dir     ->  dir
+     * @param sourceFile 源文件
+     * @param destFile 目标文件
+     * @param override 是否覆盖
      * @return 复制是否成功
-     * @throws IOException
      */
-    public static boolean copy(String source, String destination, boolean override) throws IOException {
-        return copy(new File(source), new File(destination), override);
-    }
-
-    public static boolean copy(File sourceFile, File destFile) throws IOException {
-        return copy(sourceFile, destFile, true);
-    }
-
-    public static boolean copy(File sourceFile, File destFile, boolean override) throws IOException {
+    private static boolean copyWithMove(File sourceFile, File destFile, boolean override, boolean move) throws IOException {
         if (!sourceFile.exists() || !sourceFile.canRead()) {
             throw new FileNotFoundException(sourceFile.getName());
         }
+        boolean success = true;
         // 处理source是文件的情况
         if (sourceFile.isFile()) {
             if (destFile.exists()) {
@@ -152,7 +148,7 @@ public class IOUtils extends Utils {
                 /*
                  *  目标必定不存在，并且目标一定是文件，但目录可能存在
                  *  比如cp /etc/profile ~/bak/profile
-                 *  如果~/bak/profile不存在，可能~/bak/profile存在
+                 *  如果~/bak/profile不存在，可能~/bak存在
                  */
                 String filePath = destFile.getParentFile().getAbsolutePath();
                 File dirFile = new File(filePath);
@@ -161,7 +157,11 @@ public class IOUtils extends Utils {
                 }
             }
             // 进行文件拷贝
-            copyFile(sourceFile,destFile,override);
+            success = copyFile(sourceFile,destFile,override);
+            if(move && !sourceFile.delete()){
+                // 先复制再删除
+                throw new IOException("can't remove file " + sourceFile.getAbsolutePath());
+            }
         } else {
             /*
              * 源文件是一个目录，那么目标文件必定也是一个目录
@@ -177,23 +177,50 @@ public class IOUtils extends Utils {
             }
 
             File files [] = sourceFile.listFiles();
-            for (File item : files){
-                if(item.isDirectory()
-                        && (".".equals(item.getName()) || "..".equals(item.getName()))){
-                    continue;
+            if(files  != null){
+                for (File item : files){
+                    if(item.isDirectory()
+                            && (".".equals(item.getName()) || "..".equals(item.getName()))){
+                        continue;
+                    }
+                    File toFile = new File(destFile,item.getName());
+                    // 递归调用本方法
+                    if(!copyWithMove(item,toFile,override,move)){
+                        success = false;
+                    }
                 }
-                File toFile = new File(destFile,item.getName());
-                // 递归调用本方法
-                copy(item,toFile,override);
             }
         }
-        return true;
+        return success;
     }
 
-    protected static boolean copyFile(File sourceFile, File destFile, boolean override) throws IOException {
+    public static boolean copy(String source, String destination) throws IOException {
+        return copy(source, destination, true);
+    }
+
+    /**
+     * @param source      源文件
+     * @param destination 目标文件
+     * @param override    是否覆盖
+     * @return 复制是否成功
+     * @throws IOException
+     */
+    public static boolean copy(String source, String destination, boolean override) throws IOException {
+        return copy(new File(source), new File(destination), override);
+    }
+
+    public static boolean copy(File sourceFile, File destFile) throws IOException {
+        return copy(sourceFile, destFile, true);
+    }
+
+    public static boolean copy(File sourceFile, File destFile, boolean override) throws IOException {
+        return copyWithMove(sourceFile,destFile,override,false);
+    }
+
+    private static boolean copyFile(File sourceFile, File destFile, boolean override) throws IOException {
         BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(sourceFile));
         BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(destFile));
-        byte[] buffer = new byte[4 * 1024 * 1024];
+        byte[] buffer = new byte[COPY_BUFFER_SIZE];
         int len;
         while ((len = inputStream.read(buffer)) > 0) {
             outputStream.write(buffer, 0, len);
@@ -219,19 +246,67 @@ public class IOUtils extends Utils {
                         if((".".equals(item.getName()) || "..".equals(item.getName()))){
                             continue;
                         }
+                        // 递归调用本方法
                         removePath(item.getAbsolutePath());
-                        item.deleteOnExit();
-                    } else {
-                        item.deleteOnExit();
                     }
-                    // 递归调用本方法
                 }
             }
         }
-        path.deleteOnExit();
-        return true;
+        return path.delete();
     }
-    protected static boolean move(File sourceFile,File destFile , boolean override) {
+
+    public static boolean move(String sourceFileName,String destFileName) {
+        return move(sourceFileName,destFileName,true);
+    }
+
+    public static boolean move(String sourceFileName,String destFileName,boolean override){
+        return move(new File(sourceFileName),new File(destFileName),override);
+    }
+
+    public static boolean move(File sourceFile,File destFile){
+        return move(sourceFile,destFile,true);
+    }
+
+    /**
+     * 移动文件
+     * @param sourceFile 源文件
+     * @param destFile 目标文件
+     * @param override 是否覆盖
+     * @return 移动是否成功
+     */
+    public static boolean move(File sourceFile,File destFile , boolean override){
         return !(destFile.exists() && !override) && sourceFile.renameTo(destFile);
     }
+
+    /**
+     *
+     * @param sourceFileName 源文件名
+     * @param destFileName 目标文件名
+     * @return 移动是否成功
+     * @throws IOException
+     */
+    public static boolean moveByCopy(String sourceFileName,String destFileName) throws IOException{
+        return moveByCopy(sourceFileName,destFileName,true);
+    }
+
+    public static boolean moveByCopy(String sourceFileName,String destFileName,boolean override) throws IOException{
+        return moveByCopy(new File(sourceFileName),new File(destFileName),override);
+    }
+
+    public static boolean moveByCopy(File sourceFile,File destFile) throws IOException{
+        return moveByCopy(sourceFile,destFile,true);
+    }
+
+    /**
+     * 移动文件
+     * @param sourceFile 源文件
+     * @param destFile 目标文件
+     * @param override 是否覆盖
+     * @return 移动是否成功
+     */
+    public static boolean moveByCopy(File sourceFile,File destFile , boolean override) throws IOException{
+        return copyWithMove(sourceFile,destFile,override,true);
+    }
+
+
 }

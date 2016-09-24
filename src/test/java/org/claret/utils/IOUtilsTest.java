@@ -2,8 +2,10 @@ package org.claret.utils;
 
 import junit.framework.TestCase;
 
+import java.io.File;
+import java.util.Properties;
+
 /**
- *
  * Created by lvyahui on 2016/8/26.
  */
 public class IOUtilsTest extends TestCase {
@@ -18,6 +20,10 @@ public class IOUtilsTest extends TestCase {
 
     public void testGetClassPath() throws Exception {
         System.out.println(IOUtils.getClassPath());
+    }
+
+    public void testGetUserHome() throws Exception {
+        System.out.println(IOUtils.getUserHome());
     }
 
     public void testCopy() throws Exception {
@@ -41,5 +47,29 @@ public class IOUtilsTest extends TestCase {
 
     public void testRemovePath() throws Exception {
         IOUtils.removePath("D:\\tmp");
+    }
+
+    public void testGetFileAsStream() throws Exception {
+
+    }
+
+
+    public void testExists() throws Exception {
+
+    }
+
+    public void testMove() throws Exception {
+//        IOUtils.move("F:\\images\\d6fa572f81f0f91cfc51e0966d9344c1-.jpg","F:/tmp/images/outFile.jpg",true);
+//        IOUtils.move("F:\\images\\web\\ignasi_pattern_s","F:\\images\\web\\ignasi_pattern_s_2");
+        boolean success = IOUtils.move(new File("F:\\images\\web\\ignasi_pattern_s"),new File("F:\\images\\web\\ignasi_pattern_s_2"),true);
+        System.out.println(success);
+    }
+
+
+    public void testGetTmpPath() throws Exception {
+        Properties properties = System.getProperties();
+        for(String prop : properties.stringPropertyNames()){
+            System.out.println(prop + "\t\t" + System.getProperty(prop));
+        }
     }
 }
