@@ -48,13 +48,9 @@ public class NetUtils extends Utils {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            if (response != null) {
-                try {
-                    response.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            // 保证连接全部关闭
+            closeStream(response);
+            closeStream(httpClient);
         }
         return result;
     }
@@ -165,8 +161,9 @@ public class NetUtils extends Utils {
             conn = (HttpURLConnection) u.openConnection();
             conn.setDoInput(true);
             conn.setDoOutput(true);
-            out = new PrintWriter(conn.getOutputStream(),true);
+            out = new PrintWriter(conn.getOutputStream());
             out.print(buildParams);
+            out.flush();
 
             if(conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 inputStream = conn.getInputStream();

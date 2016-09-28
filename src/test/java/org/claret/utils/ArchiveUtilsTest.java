@@ -15,7 +15,7 @@ public class ArchiveUtilsTest extends TestCase {
         List<String> srcFileList = new ArrayList<String>();
         srcFileList.add("D:\\test\\lowData");
         srcFileList.add("D:\\test\\stackData");
-        ArchiveUtils.zipData("D:\\test\\zip123456.zip", srcFileList);
+        //ArchiveUtils.zipData("D:\\test\\zip123456.zip", srcFileList);
     }
 
     public void testUnZipFiles() throws Exception {

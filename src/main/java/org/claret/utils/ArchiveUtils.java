@@ -38,6 +38,7 @@ public class ArchiveUtils extends Utils {
             }
             origin.close();
         }
+        out.flush();
         out.close();
     }
 
