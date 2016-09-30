@@ -15,7 +15,7 @@ import java.util.Map;
 
 /**
  * 网络工具
- *
+ * Net 也是IO，到底要不要合到IOUtils中，以后再看吧
  * @author lvyahui (lvyahui8@gmail.com,lvyahui8@126.com)
  */
 public class NetUtils extends Utils {
@@ -206,14 +206,6 @@ public class NetUtils extends Utils {
         return sb.toString();
     }
 
-    public static void closeStream(Closeable stream){
-        if(stream != null){
-            try {
-                stream.close();
-            } catch (IOException e) {
-                throw new RuntimeException("unable to close stream " + stream.toString());
-            }
-        }
-    }
+
 
 }

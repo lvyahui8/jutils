@@ -46,7 +46,8 @@ public class IOUtilsTest extends TestCase {
     }
 
     public void testRemovePath() throws Exception {
-        IOUtils.removePath("D:\\tmp");
+//        IOUtils.removePath("D:\\tmp");
+        IOUtils.removePath("D:\\tmp\\data");
     }
 
     public void testGetFileAsStream() throws Exception {

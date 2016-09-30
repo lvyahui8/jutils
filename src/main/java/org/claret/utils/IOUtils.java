@@ -3,6 +3,8 @@ package org.claret.utils;
 import java.io.*;
 import java.net.URL;
 import java.nio.file.FileAlreadyExistsException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * IO工具，提供批量建目录，删除文件，递归删除目录等等操作
@@ -238,21 +240,28 @@ public class IOUtils extends Utils {
 
     public static boolean removePath(String pathName){
         File path = new File(pathName);
+        boolean success = true;
         if(path.isDirectory()){
             File files [] = path.listFiles();
             if(files != null){
                 for (File item : files){
+                    boolean removed;
                     if(item.isDirectory()){
                         if((".".equals(item.getName()) || "..".equals(item.getName()))){
                             continue;
                         }
                         // 递归调用本方法
-                        removePath(item.getAbsolutePath());
+                        removed = removePath(item.getAbsolutePath());
+                    }else{
+                        removed = item.delete();
+                    }
+                    if(!removed){
+                        success = false;
                     }
                 }
             }
         }
-        return path.delete();
+        return success && path.delete();
     }
 
     public static boolean move(String sourceFileName,String destFileName) {
@@ -308,5 +317,36 @@ public class IOUtils extends Utils {
         return copyWithMove(sourceFile,destFile,override,true);
     }
 
-
+    /**
+     * 读取文件多行内容
+     * @param file  文件
+     * @param offset 行数偏移，注意空行业算在内
+     * @param length 行数
+     * @return 非空字符串list，空行会被跳过不被添加到list
+     */
+    public static List<String> readLines(File file,int offset,int length){
+        List<String> list = new ArrayList<String>();
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new FileReader(file));
+            String line;
+            int lintPoint = 0;
+            while ((line = reader.readLine()) != null){
+                if(++lintPoint < offset){
+                    continue;
+                }
+                if(length != -1 && lintPoint - offset > length){
+                    break;
+                }
+                if(line.trim().equals("")){
+                    list.add(line);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            closeStream(reader);
+        }
+        return list;
+    }
 }
