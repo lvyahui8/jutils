@@ -6,14 +6,15 @@ import java.io.Closeable;
 import java.io.IOException;
 
 /**
+ * 公共的静态方法
  * @author samlv
  * Created by samlv on 2016/8/30.
  */
-abstract public class Utils {
+abstract public class CommonUtils {
     protected static Logger logger ;
 
     static {
-        logger = Logger.getLogger(Utils.class);
+        logger = Logger.getLogger(CommonUtils.class);
     }
 
     public static void closeStream(Closeable stream){

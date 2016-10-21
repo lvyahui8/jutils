@@ -46,8 +46,8 @@ public class IOUtilsTest extends TestCase {
     }
 
     public void testRemovePath() throws Exception {
-//        IOUtils.removePath("D:\\tmp");
-        IOUtils.removePath("D:\\tmp\\data");
+//        IOUtils.removeFile("D:\\tmp");
+        IOUtils.removeFile("D:\\tmp\\data");
     }
 
     public void testGetFileAsStream() throws Exception {
@@ -56,7 +56,12 @@ public class IOUtilsTest extends TestCase {
 
 
     public void testExists() throws Exception {
-
+        long i = 120l;
+        float f = 23.4F;
+        double d = 23.4D;
+        System.out.println(i);
+        System.out.println(Double.valueOf("3.14e-5"));
+        System.out.println(Double.valueOf("3.14E-2"));
     }
 
     public void testMove() throws Exception {

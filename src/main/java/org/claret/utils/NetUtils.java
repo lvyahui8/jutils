@@ -18,7 +18,7 @@ import java.util.Map;
  * Net 也是IO，到底要不要合到IOUtils中，以后再看吧
  * @author lvyahui (lvyahui8@gmail.com,lvyahui8@126.com)
  */
-public class NetUtils extends Utils {
+public class NetUtils extends CommonUtils {
 
     public static final String  DEFAULT_ENCODE  =   "UTF-8";
     public static final int     BUFFER_SIZE     =   4096;

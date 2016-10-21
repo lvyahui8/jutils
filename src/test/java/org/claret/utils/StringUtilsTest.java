@@ -48,7 +48,7 @@ public class StringUtilsTest extends TestCase {
     }
 
     public void testJoin() throws Exception {
-        System.out.println(StringUtils.join(new String[] {"i","will","come","back","for","you!"},'*'));
+        System.out.println(StringUtils.join(new String[] {"i","will","come","back","for","you!"},"*"));
         System.out.println(StringUtils.join(new Integer[] {1,2,3,4,5}));
     }
 
@@ -74,5 +74,14 @@ public class StringUtilsTest extends TestCase {
         params.add("pfx=/usr/local");
         params.add("-f");
         System.out.println(StringUtils.convParams(params));
+    }
+
+    public void testIsNumber() throws Exception {
+        System.out.println(StringUtils.isNumber("120"));
+        System.out.println(StringUtils.isNumber("120L"));
+        System.out.println(StringUtils.isNumber("120"));
+        System.out.println(StringUtils.isNumber("3.14E-5"));
+        System.out.println(StringUtils.isNumber("0.0314"));
+        System.out.println(StringUtils.isNumber("120F"));
     }
 }

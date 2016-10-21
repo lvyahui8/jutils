@@ -2,8 +2,6 @@ package org.claret.utils;
 
 import org.claret.utils.config.*;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -11,16 +9,17 @@ import java.io.InputStream;
  * @author samlv
  */
 public class ConfigUtils {
-    public static Config load(String confFilePath) throws IOException{
-        String ext = confFilePath.substring(confFilePath.lastIndexOf('.'));
+
+    /**
+     * 加载配置文件
+     * @param confFileName 配置文件
+     * @return 配置对象
+     * @throws IOException
+     */
+    public static Config load(String confFileName) throws IOException{
+        String ext = confFileName.substring(confFileName.lastIndexOf('.'));
         Config config = null;
-        File file = new File(confFilePath);
-        InputStream stream;
-        if(file.exists()){
-            stream = new FileInputStream(file);
-        }else{
-            stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(confFilePath);
-        }
+        InputStream stream = IOUtils.getFileAsStream(confFileName);
         if(stream != null){
             if(ext.equals(Config.Type.JSON.toString())){
                 config = new JsonConfig();

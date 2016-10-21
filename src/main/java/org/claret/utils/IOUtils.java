@@ -14,7 +14,7 @@ import java.util.List;
  * Created by lvyahui on 2016/8/26.
  */
 @SuppressWarnings("unused")
-public class IOUtils extends Utils {
+public class IOUtils extends CommonUtils {
     public static final String SYS_FILE_SP = System.getProperty("file.separator");
     public static final int COPY_BUFFER_SIZE = 4 * 1024 * 1024;
 
@@ -52,14 +52,31 @@ public class IOUtils extends Utils {
         return cPath;
     }
 
+    /**
+     * 获取用户目录
+     *
+     * @return 用户目录
+     */
     public static String getUserHome(){
         return System.getProperty("user.home");
     }
 
+    /**
+     * 获取临时目录
+     *
+     * @return 临时数据目录
+     */
     public static String getTmpPath(){
         return System.getProperty("java.io.tmpdir");
     }
 
+    /**
+     * 获取一个文件流
+     *
+     * @param fileName 文件名
+     * @return 文件输入流
+     * @throws FileNotFoundException
+     */
     public static InputStream getFileAsStream(String fileName) throws FileNotFoundException {
         File file = new File(fileName);
         InputStream stream;
@@ -110,9 +127,10 @@ public class IOUtils extends Utils {
      *  file    ->  file
      *  file    ->  dir
      *  dir     ->  dir
+     *
      * @param sourceFile 源文件
      * @param destFile 目标文件
-     * @param override 是否覆盖
+     * @param override 是否覆盖已存在的目标文件
      * @return 复制是否成功
      */
     private static boolean copyWithMove(File sourceFile, File destFile, boolean override, boolean move) throws IOException {
@@ -196,25 +214,52 @@ public class IOUtils extends Utils {
         return success;
     }
 
-    public static boolean copy(String source, String destination) throws IOException {
-        return copy(source, destination, true);
+    /**
+     * 复制文件，如果目标文件存在则覆盖
+     *
+     * @param sourceFileName 源文件名
+     * @param destFileName 目标文件名
+     * @return 是否全部复制成功
+     * @throws IOException
+     */
+    public static boolean copy(String sourceFileName, String destFileName) throws IOException {
+        return copy(sourceFileName, destFileName, true);
     }
 
     /**
-     * @param source      源文件
-     * @param destination 目标文件
-     * @param override    是否覆盖
-     * @return 复制是否成功
+     * 复制文件
+     *
+     * @param sourceFileName 源文件
+     * @param destFileName 目标文件
+     * @param override 是否覆盖已存在的目标文件
+     * @return 是否全部复制成功
      * @throws IOException
      */
-    public static boolean copy(String source, String destination, boolean override) throws IOException {
-        return copy(new File(source), new File(destination), override);
+    public static boolean copy(String sourceFileName, String destFileName, boolean override) throws IOException {
+        return copy(new File(sourceFileName), new File(destFileName), override);
     }
 
+    /**
+     * 复制文件，如果目标文件存在则覆盖
+     *
+     * @param sourceFile 源文件
+     * @param destFile 目标文件
+     * @return 是否全部复制成功
+     * @throws IOException
+     */
     public static boolean copy(File sourceFile, File destFile) throws IOException {
         return copy(sourceFile, destFile, true);
     }
 
+    /**
+     * 复制文件
+     *
+     * @param sourceFile 源文件
+     * @param destFile 目标文件
+     * @param override 是否覆盖已存在的目标文件
+     * @return 是否全部复制成功
+     * @throws IOException
+     */
     public static boolean copy(File sourceFile, File destFile, boolean override) throws IOException {
         return copyWithMove(sourceFile,destFile,override,false);
     }
@@ -233,13 +278,25 @@ public class IOUtils extends Utils {
         return true;
     }
 
+    /**
+     * 文件是否存在
+     *
+     * @param fileName 文件名
+     * @return 是否存在
+     */
     public static boolean exists(String fileName){
         File file = new File(fileName);
         return file.exists();
     }
 
-    public static boolean removePath(String pathName){
-        File path = new File(pathName);
+    /**
+     * 删除文件
+     *
+     * @param fileName 文件名
+     * @return 是否全部删除成功
+     */
+    public static boolean removeFile(String fileName){
+        File path = new File(fileName);
         boolean success = true;
         if(path.isDirectory()){
             File files [] = path.listFiles();
@@ -251,7 +308,7 @@ public class IOUtils extends Utils {
                             continue;
                         }
                         // 递归调用本方法
-                        removed = removePath(item.getAbsolutePath());
+                        removed = removeFile(item.getAbsolutePath());
                     }else{
                         removed = item.delete();
                     }
@@ -264,54 +321,95 @@ public class IOUtils extends Utils {
         return success && path.delete();
     }
 
+    /**
+     * 移动文件，如果目标文件存在则覆盖
+     *
+     * @param sourceFileName 原文件名
+     * @param destFileName 目标文件名
+     * @return 是否全部移动成功
+     */
     public static boolean move(String sourceFileName,String destFileName) {
         return move(sourceFileName,destFileName,true);
     }
 
+    /**
+     * 移动文件
+     *
+     * @param sourceFileName 源文件名
+     * @param destFileName 目标文件名
+     * @param override 是否覆盖已存在的目标文件
+     * @return 是否全部移动成功
+     */
     public static boolean move(String sourceFileName,String destFileName,boolean override){
         return move(new File(sourceFileName),new File(destFileName),override);
     }
 
+    /**
+     * 移动文件，如果目标文件存在则覆盖
+     *
+     * @param sourceFile 源文件
+     * @param destFile 目标文件
+     * @return 是否全部移动成功
+     */
     public static boolean move(File sourceFile,File destFile){
         return move(sourceFile,destFile,true);
     }
 
     /**
      * 移动文件
+     *
      * @param sourceFile 源文件
      * @param destFile 目标文件
-     * @param override 是否覆盖
-     * @return 移动是否成功
+     * @param override 是否覆盖已存在的目标文件
+     * @return 是否全部移动成功
      */
     public static boolean move(File sourceFile,File destFile , boolean override){
         return !(destFile.exists() && !override) && sourceFile.renameTo(destFile);
     }
 
     /**
+     * 以先复制后删除的方式移动文件，如果目标文件存在则覆盖
      *
      * @param sourceFileName 源文件名
      * @param destFileName 目标文件名
-     * @return 移动是否成功
+     * @return 是否全部移动成功
      * @throws IOException
      */
     public static boolean moveByCopy(String sourceFileName,String destFileName) throws IOException{
         return moveByCopy(sourceFileName,destFileName,true);
     }
 
+    /**
+     * 以先复制后删除的方式移动文件
+     *
+     * @param sourceFileName 源文件名
+     * @param destFileName 目标文件名
+     * @param override 是否覆盖存在的目标文件
+     * @return 是否全部移动成功
+     * @throws IOException
+     */
     public static boolean moveByCopy(String sourceFileName,String destFileName,boolean override) throws IOException{
         return moveByCopy(new File(sourceFileName),new File(destFileName),override);
     }
 
+    /**
+     * 以先复制后删除的方式移动文件，如果目标文件存在则覆盖
+     * @param sourceFile 源文件
+     * @param destFile 目标文件
+     * @return 是否全部移动成功
+     * @throws IOException
+     */
     public static boolean moveByCopy(File sourceFile,File destFile) throws IOException{
         return moveByCopy(sourceFile,destFile,true);
     }
 
     /**
-     * 移动文件
+     * 以先复制后删除的方式移动文件
+     *
      * @param sourceFile 源文件
      * @param destFile 目标文件
-     * @param override 是否覆盖
-     * @return 移动是否成功
+     * @param override 是否覆盖存在的目标文件
+     * @return 是否全部移动成功
      */
     public static boolean moveByCopy(File sourceFile,File destFile , boolean override) throws IOException{
         return copyWithMove(sourceFile,destFile,override,true);
@@ -319,8 +417,9 @@ public class IOUtils extends Utils {
 
     /**
      * 读取文件多行内容
+     *
      * @param file  文件
-     * @param offset 行数偏移，注意空行业算在内
+     * @param offset 行数偏移，注意空行也算在内
      * @param length 行数
      * @return 非空字符串list，空行会被跳过不被添加到list
      */

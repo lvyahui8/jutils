@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
  * Console工具类
  * Created by lvyahui on 2016/8/26.
  */
-public class ShellUtils extends Utils {
+public class ShellUtils extends CommonUtils {
 
     public enum OSType {
         WINDOWS, LINUX, MAC, FREEBSD, OTHER;
@@ -52,15 +52,6 @@ public class ShellUtils extends Utils {
         return osType;
     }
 
-    /**
-     * 执行一条命令
-     *
-     * @param cmd 命令
-     * @return 标准输出
-     */
-    public static String execCommand(final String cmd) {
-        return null;
-    }
 
     /**
      * 执行一条命令
@@ -137,7 +128,7 @@ public class ShellUtils extends Utils {
         String [] commands = new String [commandParser.length + 1];
 
         System.arraycopy(commandParser,0,commands,0,commandParser.length);
-        commands[commandParser.length] = StringUtils.join(cmd,' ');
+        commands[commandParser.length] = StringUtils.join(cmd," ");
 //        System.arraycopy(cmd,0,commands,commandParser.length,cmd.length);
         return commands;
     }

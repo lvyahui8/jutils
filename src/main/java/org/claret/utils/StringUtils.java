@@ -11,7 +11,7 @@ import java.util.Map;
  * 字符串工具类
  * Created by lvyahui on 2016/8/26.
  */
-public class StringUtils extends Utils {
+public class StringUtils extends CommonUtils {
 
     /**
      * 蛇形字符串缓存
@@ -129,6 +129,7 @@ public class StringUtils extends Utils {
 
     /**
      * 将语句中的单词的首字母大写
+     *
      * @param str 空格分隔的英文单词语句
      * @param delimiter 分隔符
      * @return 单词首字母大写的串
@@ -142,11 +143,24 @@ public class StringUtils extends Utils {
         return ucStr.toString().trim();
     }
 
+    /**
+     * 以,连接对象，将调用对象的toString方法获得字符串
+     *
+     * @param strs 待连接对象数组
+     * @return 连接之后的字符串
+     */
     public static String join(Object [] strs){
-        return join(strs,',');
+        return join(strs,",");
     }
 
-    public static String join(Object [] strs,char delimiter){
+    /**
+     * 以指定分隔符连接对象，将调用对象的toString方法获得字符串
+     *
+     * @param strs 待连接对象数组
+     * @param delimiter 分隔符
+     * @return 连接之后的字符串
+     */
+    public static String join(Object [] strs,CharSequence delimiter){
         StringBuilder joiner = new StringBuilder();
         for (int i = 0;i < strs.length ; i++){
             if(i > 0){
@@ -159,6 +173,12 @@ public class StringUtils extends Utils {
         return joiner.toString();
     }
 
+    /**
+     * 检测字符对象是否是null或者长度为0的字符串
+     *
+     * @param sequence 待检测字符串
+     * @return 检测结果
+     */
     public static boolean isEmpty(CharSequence sequence){
         return sequence != null && sequence.length() == 0;
     }
@@ -183,6 +203,13 @@ public class StringUtils extends Utils {
         });
     }
 
+    /**
+     * 遍历字符串，使用比较器检测每个字符
+     *
+     * @param cs 待检测字符串
+     * @param comparable 比较器
+     * @return 当所有字符都满足比较器的结果为0时返回true
+     */
     public static boolean each(CharSequence cs, Comparable<Character> comparable){
         if(comparable == null){
             return false;
@@ -199,6 +226,12 @@ public class StringUtils extends Utils {
         }
     }
 
+    /**
+     * 解析命令行参数，主要解析main方法传递进来的参数
+     *
+     * @param params 参数
+     * @return kv形式的参数
+     */
     public static Map<String,Object> convParams(List<String> params){
         Map<String,Object> paramMap = new HashMap<String, Object>();
         for (String param : params){
@@ -211,4 +244,28 @@ public class StringUtils extends Utils {
         }
         return paramMap;
     }
+
+    /**
+     * 检测字符串是否是数字
+     * @param cs 字符串
+     * @return 是否是字符串
+     */
+    public static boolean isNumber(CharSequence cs) {
+//        return !isEmpty(cs) && cs.matches("[0-9]+(\\.[0-9]+)+[eE]?[lLfFdD]");
+        if(isEmpty(cs)) {
+            return false;
+        } else {
+            int sz = cs.length();
+
+            for(int i = 0; i < sz; ++i) {
+                if(!Character.isDigit(cs.charAt(i))) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+    }
+
+
 }
