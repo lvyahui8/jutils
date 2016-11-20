@@ -1,8 +1,10 @@
 package org.claret.utils;
 
 import java.io.*;
+import java.math.BigInteger;
 import java.net.URL;
 import java.nio.file.FileAlreadyExistsException;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -448,4 +450,51 @@ public class IOUtils extends CommonUtils {
         }
         return list;
     }
+
+    /**
+     * 获取文件的HASH值
+     * @param file 文件
+     * @param algorithm 算法
+     * @return HASH值
+     */
+    public static String getFileHASH(File file,String algorithm){
+        if(!file.isFile()){
+            return null;
+        }
+
+        FileInputStream inputStream = null;
+        int len;
+        byte [] buffer = new byte[COPY_BUFFER_SIZE];
+        try {
+            MessageDigest digest = MessageDigest.getInstance(algorithm);
+            inputStream = new FileInputStream(file);
+            while((len = inputStream.read()) != -1){
+                digest.update(buffer,0,len);
+            }
+
+            BigInteger integer = new BigInteger(1,digest.digest());
+            return  integer.toString(16);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeStream(inputStream);
+        }
+        return null;
+    }
+
+    public static String getFileMD5(File file){
+        return getFileHASH(file,"MD5");
+    }
+
+    public static String getFileSHA1(File file){
+        return getFileHASH(file,"SHA-1");
+    }
+
+    public static boolean compare(File f1,File f2){
+        String hash1 = IOUtils.getFileMD5(f1);
+        String hash2 = IOUtils.getFileMD5(f2);
+
+        return hash1 != null ? hash1.equals(hash2) : hash2 == null;
+    }
+
 }

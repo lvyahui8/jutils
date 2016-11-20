@@ -78,4 +78,26 @@ public class IOUtilsTest extends TestCase {
             System.out.println(prop + "\t\t" + System.getProperty(prop));
         }
     }
+
+    public void testGetFileMD5() throws Exception {
+        String md5Str = IOUtils.getFileMD5(new File("C:\\Windows\\System32\\drivers\\etc\\hosts"));
+        System.out.println(md5Str);
+    }
+
+    public void testGetFileSHA1() throws Exception {
+        String sha1 = IOUtils.getFileSHA1(new File("C:\\Windows\\System32\\drivers\\etc\\hosts"));
+        System.out.println(sha1);
+    }
+
+    public void testCompare() throws Exception {
+        File srcFile = new File("C:\\Windows\\System32\\drivers\\etc\\hosts");
+        File distFile = new File("C:\\Windows\\System32\\drivers\\etc\\hosts.bak");
+        IOUtils.copy(srcFile,distFile);
+        if(IOUtils.compare(srcFile,distFile)){
+            System.out.println("Two files are the same!");
+        } else {
+            System.out.println("Two files are not the same!");
+        }
+        IOUtils.removeFile(distFile.getAbsolutePath());
+    }
 }
