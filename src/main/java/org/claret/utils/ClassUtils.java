@@ -2,6 +2,8 @@ package org.claret.utils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -9,6 +11,7 @@ import java.util.Map;
  *
  * @author samlv
  */
+@SuppressWarnings("unused")
 public class ClassUtils extends CommonUtils {
 
     /**
@@ -52,32 +55,6 @@ public class ClassUtils extends CommonUtils {
     public static void fill(Object bean, Map<String, Object> values)  {
         Class<?> clazz = bean.getClass();
 
-//        // 获取所有字段，包括private的
-//        Field fields[] = clazz.getDeclaredFields();
-//
-//        for (Field field : fields) {
-//            String fieldName = field.getName();
-//            // 查找参数集合
-//            Object value = values.get(fieldName);
-//            if (value != null) {
-//                String methodName = "set" + fieldName.substring(0, 1).toUpperCase()
-//                        + fieldName.substring(1);
-//                Class fieldType = field.getType();
-//                Method method;
-//                try {
-//                    method = clazz.getMethod(methodName, fieldType);
-//                } catch (NoSuchMethodException e) {
-//                    method = null;
-//                }
-//                if(method != null){
-//                    try {
-//                        // method.setAccessible(true);
-//                        method.invoke(bean, fieldType.cast(value));
-//                    } catch (ReflectiveOperationException e){}
-//                }
-//            }
-//        }
-
         for (Map.Entry<String,Object> item : values.entrySet()){
             try {
                 Class<?> fieldType ;
@@ -90,8 +67,47 @@ public class ClassUtils extends CommonUtils {
 
                 method.invoke(bean,fieldType.cast(value));
             } catch (ReflectiveOperationException e) {
-
+                //
             }
+        }
+    }
+
+    /**
+     * 以字符串数组的形式获取类的所有字段
+     *
+     * @param className 类名
+     * @return 所有字段
+     */
+    public static String [] getFieldsAsString(String className){
+        List<String> strFields = new ArrayList<String>();
+        for (Field field : getFields(className)){
+            strFields.add(field.getName());
+        }
+        return strFields.toArray(new String[strFields.size()]);
+    }
+
+    /**
+     * 获取类的所有字段
+     *
+     * @param className 类名
+     * @return 字段数组
+     */
+    public static Field [] getFields(String className){
+        Class<?> clazz = loadClass(className);
+        return clazz != null ?  clazz.getDeclaredFields() : new Field[]{};
+    }
+
+    /**
+     * 加载类
+     *
+     * @param className 类名
+     * @return 类的字节码对象
+     */
+    public static Class<?> loadClass(String className){
+        try {
+            return Class.forName(className);
+        } catch (ClassNotFoundException e) {
+            return null;
         }
     }
 }

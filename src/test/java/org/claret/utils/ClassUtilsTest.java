@@ -38,4 +38,16 @@ public class ClassUtilsTest extends TestCase {
         ClassUtils.fill(user,params);
         System.out.println(user);
     }
+
+    public void testGetFieldsAsString() throws Exception {
+        String [] fileds = ClassUtils.getFieldsAsString("org.claret.vo.User");
+        for (String field : fileds){
+            System.out.println(field);
+        }
+    }
+
+
+    public void testLoadClass() throws Exception {
+        System.out.println(ClassUtils.loadClass("org.claret.vo.User"));
+    }
 }

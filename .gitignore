@@ -34,3 +34,4 @@ bin
 # Miscellaneous
 *.log
 .clover
+/dependency-reduced-pom.xml
