@@ -1,7 +1,10 @@
 package org.claret.utils;
 
 import junit.framework.TestCase;
+import org.claret.utils.var.Charset;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,6 +79,22 @@ public class StringUtilsTest extends TestCase {
         System.out.println(StringUtils.convParams(params));
     }
 
+    public void testToCharset() throws Exception {
+        System.out.println(StringUtils.toCharset("吕亚辉","GBK"));
+        System.out.println(StringUtils.toCharset("吕亚辉", Charset.GBK));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(IOUtils.getFileAsStream("data/gbk_text.txt")));
+        if(reader.ready()){
+            String line ;
+            while((line = reader.readLine()) != null){
+                System.out.println(StringUtils.toCharset(line,Charset.UTF8));
+            }
+        }
+        IOUtils.closeStream(reader);
+    }
+
+    public void testGetEncoding() throws Exception {
+
+    }
     public void testIsNumber() throws Exception {
         System.out.println(StringUtils.isNumber("120"));
         System.out.println(StringUtils.isNumber("120L"));

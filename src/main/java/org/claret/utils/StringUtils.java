@@ -1,5 +1,7 @@
 package org.claret.utils;
 
+import org.claret.utils.var.Charset;
+
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -245,6 +247,35 @@ public class StringUtils extends CommonUtils {
         return paramMap;
     }
 
+    public static String toCharset(final String src , final Charset charset){
+        return toCharset(src,charset.toString());
+    }
+    public static String toCharset(final String src , final String charset){
+        String oldCharset = getEncoding(src).toString();
+        if(Charset.UNKOWN.toString().equals(oldCharset)){
+            return src;
+        }
+        try {
+            return new String(src.getBytes(oldCharset),charset);
+        } catch (UnsupportedEncodingException e) {
+            return src;
+        }
+    }
+
+
+
+    public static Charset getEncoding(final String str) {
+        for (Charset charset : Charset.values()) {
+            try {
+                if (str.equals(new String(str.getBytes(charset.toString()), charset.toString()))) {
+                    return charset;
+                }
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        }
+        return Charset.UNKOWN;
+    }
     /**
      * 检测字符串是否是数字
      * @param cs 字符串
