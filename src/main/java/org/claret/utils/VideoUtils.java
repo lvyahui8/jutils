@@ -8,6 +8,7 @@ import java.io.IOException;
  * 暂时是linux版本
  * Created by lvyahui on 2016/8/26.
  */
+@SuppressWarnings("unused")
 public class VideoUtils extends CommonUtils {
     public static final String FFMPEG_EXECUTOR = "ffmpeg";
 

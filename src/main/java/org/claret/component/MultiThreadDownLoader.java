@@ -1,8 +1,6 @@
 package org.claret.component;
 
 
-import org.claret.utils.NetUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -10,9 +8,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 
 /**
  * 多线程下载器
@@ -21,11 +17,11 @@ import java.util.concurrent.Executors;
  */
 public class MultiThreadDownLoader {
     public static final int MAX_WAIT_TIME = 5000;
+    public static final String SUFFIX = ".dtmp";
 
     // 文件路径，例如D:/xampp/
     private String filePath;
 
-    // 文件全名，例如D:/xampp/start.exe
     private String fileFullName;
 
     private List<Long> ids = new ArrayList<Long>();
@@ -68,7 +64,7 @@ public class MultiThreadDownLoader {
     private boolean removeTempFiles() {
         boolean isRemoved = true;
         for (Long id : ids) {
-            File deleteFile = new File(filePath + File.separator + String.valueOf(id) + ".dtmp");
+            File deleteFile = new File(filePath + File.separator + String.valueOf(id) + SUFFIX);
             if (!(deleteFile.exists() && deleteFile.delete())) {
                 isRemoved = false;
             }
@@ -76,8 +72,8 @@ public class MultiThreadDownLoader {
         return isRemoved;
     }
 
-    public void start() {
-        Runnable initTask = new Runnable() {
+    public Boolean download() {
+        Callable<Boolean> initTask = new Callable<Boolean>() {
             /*
              * 确认下载文件的大小，不一定可以拿到的，有的http响应并没有指明content length，
              * 如果拿不到，只能单线程下载了
@@ -117,20 +113,19 @@ public class MultiThreadDownLoader {
                 }
             }
 
-            public void run() {
+            public Boolean call() {
 
                 if( ! initTotalSize()){
                     // 使用一个线程下载
-                    System.out.println("获取大小失败");
+                    threadCount = 1;
                 }
 
                 if(!createDownloadFile()){
-                    return;
+                    return false;
                 }
 
                 // 每个线程应该下载的大小
                 long blockSize = size / threadCount;
-                System.out.println("total size:"+size);
                 for (long i = 0; i < threadCount; i++) {
                     long startIndex = i * blockSize;
                     long endIndex = startIndex + blockSize - 1;
@@ -140,8 +135,7 @@ public class MultiThreadDownLoader {
                     }
                     // 记录每个线程的id
                     ids.add(i);
-                    System.out.println("thread " + i  + " download : " + startIndex + "," + endIndex);
-                    String tmpFile = filePath + File.separator + i + ".dtmp";
+                    String tmpFile = filePath + File.separator + i + SUFFIX;
                     DownLoadRunnable dr = new DownLoadRunnable(fileFullName, startIndex, endIndex, uri, tmpFile);
                     dr.setDownLoader(MultiThreadDownLoader.this);
                     dr.setNotifyLatch(downloadLatchs);
@@ -159,15 +153,22 @@ public class MultiThreadDownLoader {
                     if (downFinish) {
                         // 如果下载完成，删除临时文件，否则保留做断点续传
                         removeTempFiles();
+                        return true;
                     }
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    return false;
                 }
+                return false;
             }
         };
 
-//        threadPool.execute(initTask);
-        new Thread(initTask).start();
+        FutureTask<Boolean> future = new FutureTask<Boolean>(initTask);
+        new Thread(future).start();
+        try {
+            return future.get();
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     /**
@@ -181,13 +182,4 @@ public class MultiThreadDownLoader {
         }
     }
 
-    /**
-     * 下载器基于junit测试在获取responseCode代码住停止了，不继续往后面执行，可能是junit的问题
-     * @param args
-     */
-    public static void main(String[] args) {
-        NetUtils.multiThreadDownload(
-                "http://movesun.qq.com/audios/ybxyq.mp3"
-                ,"F:/ybxyq.mp3",8);
-    }
 }

@@ -3,6 +3,7 @@ package org.claret.utils;
 /**
  * @author samlv
  */
+@SuppressWarnings("unused")
 public class NumberUtils extends CommonUtils {
 
     public static final char [] literalSymol = {'l','L','f','F','d','D'};

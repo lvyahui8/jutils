@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
  * Console工具类
  * Created by lvyahui on 2016/8/26.
  */
+@SuppressWarnings("unused")
 public class ShellUtils extends CommonUtils {
 
     public enum OSType {

@@ -1,13 +1,11 @@
 package org.claret.utils;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
 import org.claret.component.MultiThreadDownLoader;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -18,6 +16,7 @@ import java.util.Map;
  * Net 也是IO，到底要不要合到IOUtils中，以后再看吧
  * @author lvyahui (lvyahui8@gmail.com,lvyahui8@126.com)
  */
+@SuppressWarnings("unused")
 public class NetUtils extends CommonUtils {
 
     public static final String  DEFAULT_ENCODE  =   "UTF-8";
@@ -30,29 +29,7 @@ public class NetUtils extends CommonUtils {
      * @return 下载成功或失败
      */
     public static boolean download(String url, String saveFile) {
-        if (!isHttpUrl(url)) {
-            url = buildHttpUrl(url);
-        }
-        boolean result = false;
-        CloseableHttpClient httpClient = HttpClients.createDefault();
-        HttpGet httpGet = new HttpGet(url);
-        CloseableHttpResponse response = null;
-        try {
-            response = httpClient.execute(httpGet);
-            HttpEntity entity = response.getEntity();
-            if (entity != null) {
-                FileOutputStream fout = new FileOutputStream(new File(saveFile));
-                entity.writeTo(fout);
-                result = true;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            // 保证连接全部关闭
-            closeStream(response);
-            closeStream(httpClient);
-        }
-        return result;
+        return download(url,saveFile,1);
     }
 
     /**
@@ -61,12 +38,14 @@ public class NetUtils extends CommonUtils {
      * @param saveFile 保存的全文件名
      * @return 下载成功或失败
      */
-    public static boolean multiThreadDownload(String url, String saveFile,int count){
+    public static boolean download(String url, String saveFile, int threadCount){
+        if(!isHttpUrl(url)){
+            url = buildHttpUrl(url);
+        }
         MultiThreadDownLoader downLoader = new MultiThreadDownLoader(url);
         downLoader.setFileFullName(saveFile);
-        downLoader.setThreadCount(count);
-        downLoader.start();
-        return false;
+        downLoader.setThreadCount(threadCount);
+        return downLoader.download();
     }
 
     private static String buildHttpUrl(String url) {

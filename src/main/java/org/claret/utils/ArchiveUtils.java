@@ -13,6 +13,7 @@ import java.util.List;
  * 解压缩工具，支持zip,tgz,bzip2,gzip,pack200,lzma,xz,jar,7z等
  * Created by lvyahui on 2016/8/26.
  */
+@SuppressWarnings("unused")
 public class ArchiveUtils extends CommonUtils {
     private static final int BUFFER = 2048;
 

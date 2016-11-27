@@ -8,6 +8,7 @@ import java.io.InputStream;
 /**
  * @author samlv
  */
+@SuppressWarnings("unused")
 public class ConfigUtils {
 
     /**

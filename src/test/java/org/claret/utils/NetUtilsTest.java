@@ -28,7 +28,7 @@ public class NetUtilsTest extends TestCase {
     }
 
     public void testMultiThreadDownload() throws Exception {
-        NetUtils.multiThreadDownload(
+        NetUtils.download(
                 "http://movesun.qq.com/audios/ybxyq.mp3"
                 ,"F:/ybxyq.mp3",3);
     }
