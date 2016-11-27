@@ -4,7 +4,7 @@
 
     <groupId>org.claret</groupId>
     <artifactId>jutils</artifactId>
-    <version>1.0</version>
+    <version>1.0.3</version>
     <packaging>jar</packaging>
 
     <name>jutils</name>
