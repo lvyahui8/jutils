@@ -8,6 +8,7 @@ import java.util.Random;
  * @author lvyahui (lvyahui8@gmail.com,lvyahui8@126.com)
  * @since 2016/9/30 16:06
  */
+@SuppressWarnings("unused")
 public class RandomUtils extends CommonUtils {
 
     /**

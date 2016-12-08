@@ -13,6 +13,7 @@ import java.util.Map;
  * 字符串工具类
  * Created by lvyahui on 2016/8/26.
  */
+@SuppressWarnings("unused")
 public class StringUtils extends CommonUtils {
 
     /**
