@@ -110,4 +110,24 @@ public class ClassUtils extends CommonUtils {
             return null;
         }
     }
+
+    /**
+     * 获取调用者类名
+     * @return 调用者类名
+     */
+    public static String getInvokeClassName(){
+        return new Exception().getStackTrace()[2].getClassName();
+    }
+
+    /**
+     * 获取调用者方法名
+     * @return 调用者方法名
+     */
+    public static String getInvokeMethodName(){
+        return new Exception().getStackTrace()[2].getMethodName();
+    }
+
+    public static int getInvokeLineNumber(){
+        return new Exception().getStackTrace()[2].getLineNumber();
+    }
 }
