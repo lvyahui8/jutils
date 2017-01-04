@@ -300,4 +300,101 @@ public class StringUtils extends CommonUtils {
     }
 
 
+    /**
+     * 左端补齐，左端超出部分被截取
+     * @param str 字符串
+     * @param len 补齐之后的长度
+     * @param ch 补齐使用的占位符
+     * @return 补齐之后的字符串
+     */
+    public static String ljust(String str, int len , char ch) {
+        return just(str,len,ch,false);
+    }
+
+    /**
+     * 右端补齐，右端超出部分被截取
+     * @param str 字符串
+     * @param len 补齐之后的长度
+     * @param ch 补齐使用的占位符
+     * @return 补齐之后的字符串
+     */
+    public static String rjust(String str, int len , char ch) {
+        return just(str,len,ch,true);
+    }
+
+    private static String just(String str, int len , char ch , boolean right){
+        if(len <= str.length()){
+            return right  ? str.substring(0,len)
+                    : str.substring(str.length() - len,str.length()) ;
+        }
+        int p = len - str.length();
+        StringBuilder sb = new StringBuilder(str);
+        for (int i = 0 ; i < p; i++){
+            if(right){
+                sb.append(ch);
+            }else {
+                sb.insert(0,ch);
+            }
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 字符是否是中文
+     * @param ch 字符
+     * @return 是否是中文
+     */
+    private static  boolean isChinese(char ch) {
+        Character.UnicodeBlock ub = Character.UnicodeBlock.of(ch);
+        return ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS
+                || ub == Character.UnicodeBlock.CJK_COMPATIBILITY_IDEOGRAPHS
+                || ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS_EXTENSION_A
+                // GENERAL_PUNCTUATION 判断中文的“号
+                || ub == Character.UnicodeBlock.GENERAL_PUNCTUATION
+                // CJK_SYMBOLS_AND_PUNCTUATION 判断中文的。号
+                || ub == Character.UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION
+                // HALFWIDTH_AND_FULLWIDTH_FORMS 判断中文的，号
+                || ub == Character.UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS;
+    }
+
+    /**
+     * 字符串中是否包含中文
+     * @param strName 字符串
+     * @return 是否包含中文
+     */
+    public static boolean isChinese(String strName) {
+        char[] ch = strName.toCharArray();
+        for (char c : ch) {
+            if (isChinese(c)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 替换掉文字中的emoji表情，此类表情在某些数据库存储会造成sql错误
+     * @param str 带有Emoji的字符串
+     * @param replace 用来替换的字符串
+     * @return 替换完的字符串
+     */
+    public static String replaceEmoji(String str,String replace){
+        String [] matchs = new String[]{
+                // Match Emoticons
+                "/[\\x{1F600}-\\x{1F64F}]/u",
+                // Match Miscellaneous Symbols and Pictographs
+                "/[\\x{1F300}-\\x{1F5FF}]/u",
+                // Match Transport And Map Symbols
+                "/[\\x{1F680}-\\x{1F6FF}]/u",
+                // Match Miscellaneous Symbols
+                "/[\\x{2600}-\\x{26FF}]/u",
+                // Match Dingbats
+                "/[\\x{2700}-\\x{27BF}]/u"
+        };
+
+        for (String match : matchs){
+            str = str.replaceAll(match,replace);
+        }
+        return str;
+    }
 }

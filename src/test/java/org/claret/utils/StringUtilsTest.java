@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  *
@@ -102,5 +103,58 @@ public class StringUtilsTest extends TestCase {
         System.out.println(StringUtils.isNumber("3.14E-5"));
         System.out.println(StringUtils.isNumber("0.0314"));
         System.out.println(StringUtils.isNumber("120F"));
+    }
+
+    public void testLjust() throws Exception {
+        System.out.println(StringUtils.ljust("FF0B",8,'0'));
+        System.out.println(StringUtils.ljust("FFFFFFAABB",8,'0'));
+    }
+
+    public void testRjust() throws Exception {
+        System.out.println(StringUtils.rjust("FF0B",8,'0'));
+        System.out.println(StringUtils.rjust("FFFFFFAABB",8,'0'));
+    }
+
+    public void testEach() throws Exception {
+        byte[] b = {(byte) 99, (byte)97, (byte)116};
+        String s = new String(b, "UTF-8");
+        System.out.println(s);
+    }
+
+    public void testIsChinese() throws Exception {
+        System.out.println(StringUtils.isChinese("abc==吕亚辉==adb"));
+    }
+
+    public void testReplaceEmoji() throws Exception {
+
+        byte [][] emojis = new byte[][]{
+                // 笑哭
+                {(byte) 0xF0,(byte) 0x9F,(byte) 0x93,(byte) 0xA0},
+                // 吻
+                {(byte) 0xF0,(byte) 0x9F,(byte) 0x8E,(byte) 0x86},
+        };
+        byte [] randomChars = "abcdefg".getBytes();
+        List<Byte> chars = new ArrayList<Byte>();
+
+        Random r = new Random(System.currentTimeMillis());
+
+        for (int i = 0; i < 10 ; i++){
+            byte [] emoji = emojis[r.nextInt(emojis.length)];
+            for (Byte b : emoji){
+               chars.add(b);
+            }
+            chars.add(randomChars[r.nextInt(randomChars.length)]);
+        }
+        byte charsArr [] = new byte[chars.size()];
+        for (int i = 0; i < chars.size() ; i ++ ){
+            charsArr[i] = chars.get(i);
+        }
+        String str = new String(charsArr,0,charsArr.length,"UTF-8");
+
+        System.out.println(str);
+
+        str = StringUtils.replaceEmoji(str,"表情");
+
+        System.err.println(str);
     }
 }
