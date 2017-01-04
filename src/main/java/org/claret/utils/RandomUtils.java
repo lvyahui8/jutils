@@ -18,6 +18,8 @@ public class RandomUtils extends CommonUtils {
 
     private static Random random ;
 
+    private static int sque = 0;
+
     static {
         random = new Random(System.currentTimeMillis());
     }
@@ -59,4 +61,26 @@ public class RandomUtils extends CommonUtils {
         return builder.toString();
     }
 
+
+    /**
+     * 生成一个唯一标识Id，根据timestamp + (sque++) 形式得出
+     * @return GUID
+     */
+    public static long createGuid(){
+        long nanoTime = System.nanoTime();
+        synchronized (RandomUtils.class){
+            nanoTime = nanoTime * 100 + (++sque >= 100 ? sque = 0 : sque);
+        }
+        return nanoTime;
+    }
+
+    /**
+     * 生成一个唯一标识字符串，根据timestamp + (sque++) 形式得出
+     * @param len 标识串长度
+     * @return 标识串
+     */
+    public static String createGuidStr(int len){
+        long guid = createGuid();
+        return StringUtils.ljust(Long.toHexString(guid),len,'0');
+    }
 }
