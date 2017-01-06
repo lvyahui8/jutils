@@ -18,7 +18,13 @@ public class RandomUtils extends CommonUtils {
 
     private static Random random ;
 
-    private static int sque = 0;
+    private static long sque = 0;
+
+    private static final long sequenceBits = 8L;
+
+    private static final long sequenceMask = ~(-1L << sequenceBits);
+
+    private static final long timestampLeftShift = sequenceBits;
 
     static {
         random = new Random(System.currentTimeMillis());
@@ -67,11 +73,11 @@ public class RandomUtils extends CommonUtils {
      * @return GUID
      */
     public static long createGuid(){
-        long nanoTime = System.nanoTime();
+        long timeMillis = System.currentTimeMillis();
         synchronized (RandomUtils.class){
-            nanoTime = nanoTime * 100 + (++sque >= 100 ? sque = 0 : sque);
+            timeMillis = timeMillis << timestampLeftShift | (sque = (sque + 1) & sequenceMask);
         }
-        return nanoTime;
+        return timeMillis;
     }
 
     /**
