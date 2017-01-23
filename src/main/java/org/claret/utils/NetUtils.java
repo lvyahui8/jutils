@@ -61,15 +61,15 @@ public class NetUtils extends CommonUtils {
      * @param url 请求地址
      * @return 响应
      */
-    public static String get(String url, Map<String, Object> params) {
-        return get(url,params,false);
+    public static String get(String url, Map<String, Object> params,Map<String,Object> headers) {
+        return get(url,params,headers,false);
     }
 
-    private static String get(String url, Map<String, Object> params, boolean encode) {
-        return get(url,params,encode,DEFAULT_ENCODE);
+    private static String get(String url, Map<String, Object> params, Map<String,Object> headers,boolean encode) {
+        return get(url,params,headers,encode,DEFAULT_ENCODE);
     }
 
-    public static String get(String url, Map<String, Object> params,boolean encode,String charset){
+    public static String get(String url, Map<String, Object> params,Map<String,Object> headers, boolean encode, String charset){
         if(params != null){
             url = url.concat("?").concat(buildParams(params));
         }
@@ -80,7 +80,10 @@ public class NetUtils extends CommonUtils {
                 return null;
             }
         }
-        return get(url);
+        return get(url,headers);
+    }
+    public static String get(String url){
+        return get(url,null);
     }
 
     /**
@@ -88,12 +91,17 @@ public class NetUtils extends CommonUtils {
      * @param url 请求地址
      * @return 响应
      */
-    public static String get(String url) {
+    public static String get(String url,Map<String,Object> headers) {
         InputStream inputStream = null;
         HttpURLConnection conn = null;
         try {
             URL u = new URL(url);
             conn = (HttpURLConnection) u.openConnection();
+            if(headers != null && !headers.isEmpty()){
+                for (Map.Entry<String,Object> header : headers.entrySet()){
+                    conn.setRequestProperty(header.getKey(),header.getValue().toString());
+                }
+            }
             conn.connect();
 
             if(conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
@@ -132,12 +140,20 @@ public class NetUtils extends CommonUtils {
     }
 
     public static String post(String url, String buildParams){
+        return post(url,buildParams,null);
+    }
+    public static String post(String url, String buildParams,Map<String,Object> headers){
         PrintWriter out = null;
         InputStream inputStream = null;
         HttpURLConnection conn = null;
         try {
             URL u = new URL(url);
             conn = (HttpURLConnection) u.openConnection();
+            if(headers != null && !headers.isEmpty()){
+                for (Map.Entry<String,Object> header : headers.entrySet()){
+                    conn.setRequestProperty(header.getKey(),header.getValue().toString());
+                }
+            }
             conn.setDoInput(true);
             conn.setDoOutput(true);
             out = new PrintWriter(conn.getOutputStream());
