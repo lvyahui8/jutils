@@ -1,12 +1,16 @@
 package org.claret.vo;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
  * @author samlv
  */
 @SuppressWarnings("unused")
-public class User {
+public class User implements Serializable {
+
+    private static final long serialVersionUID = 6241752054760744461L;
+
     private Integer id;
     private String username ;
     private Timestamp lastLogin;

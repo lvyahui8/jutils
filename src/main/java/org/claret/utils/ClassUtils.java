@@ -1,8 +1,10 @@
 package org.claret.utils;
 
+import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -108,6 +110,101 @@ public class ClassUtils extends CommonUtils {
             return Class.forName(className);
         } catch (ClassNotFoundException e) {
             return null;
+        }
+    }
+
+    /**
+     * 序列化对象为字节数组
+     * @param obj 待序列化对象
+     * @return 序列化数据
+     */
+    public static byte [] serialize(Object obj){
+        ByteArrayOutputStream objBytes = new ByteArrayOutputStream();
+        try {
+            ObjectOutputStream out = new ObjectOutputStream(objBytes);
+            out.writeObject(obj);
+            return objBytes.toByteArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 序列化对象为字节数组
+     * @param obj 待序列化对象
+     * @param file 目标文件
+     * @return 是否序列化成功
+     */
+    public static boolean serializeToFile(Object obj,File file) throws IOException{
+        if(obj == null || file == null) return false;
+
+        if(!file.exists()){
+            try {
+                if(file.createNewFile()){
+                    return false;
+                }
+            } catch (IOException e) {
+                throw new IOException("No permission to create file : " + file.getName());
+            }
+        } else if(file.isDirectory()){
+            throw new IOException("There is a directory with the same name : " + file.getName());
+        }
+
+        BufferedOutputStream outputStream = null;
+        try{
+            outputStream = new BufferedOutputStream(new FileOutputStream(file));
+            byte [] data = serialize(obj);
+            if(data != null){
+                outputStream.write(data);
+                outputStream.flush();
+                return true;
+            }
+        } finally {
+            closeStream(outputStream);
+        }
+
+
+        return false;
+    }
+
+    /**
+     * 反序列化字节数组为对象
+     * @param data 序列化数据
+     * @return 反序列化对象
+     */
+    public static Object deserialize(byte [] data){
+        if(data == null){
+            return null;
+        }
+        ByteArrayInputStream bin = new ByteArrayInputStream(data);
+        try
+        {
+            ObjectInputStream obin = new ObjectInputStream(bin);
+            return obin.readObject();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 反序列化数据文件为对象
+     * @param file 序列化数据文件
+     * @return 反序列化对象
+     */
+    public static Object deserializeFromFile(File file) throws IOException{
+        BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(file));
+        byte [] data = new byte[4096];
+        int len;
+        try{
+            if((len = inputStream.read(data)) >= 0){
+                return deserialize(Arrays.copyOf(data,len));
+            } else {
+                return null;
+            }
+        } finally {
+            closeStream(inputStream);
         }
     }
 

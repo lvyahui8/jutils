@@ -3,6 +3,7 @@ package org.claret.utils;
 import junit.framework.TestCase;
 import org.claret.vo.User;
 
+import java.io.File;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,6 +21,14 @@ public class ClassUtilsTest extends TestCase {
     public void testIsVisible() throws Exception {
         System.out.println(ClassUtils.isVisible("org.claret.utils.IOUtils",null));
         System.out.println(ClassUtils.isVisible("org.claret.utils.AppUtils",null));
+    }
+
+    private User createSimpleUser(){
+        User user = new User();
+        user.setId(1);
+        user.setUsername("lvyahui");
+        user.setLastLogin(new Timestamp(System.currentTimeMillis()));
+        return user;
     }
 
     public void testFill() throws Exception {
@@ -49,5 +58,43 @@ public class ClassUtilsTest extends TestCase {
 
     public void testLoadClass() throws Exception {
         System.out.println(ClassUtils.loadClass("org.claret.vo.User"));
+    }
+
+    public void testSerialize() throws Exception {
+        User user = createSimpleUser();
+
+        byte [] userData = ClassUtils.serialize(user);
+        User reUser = (User) ClassUtils.deserialize(userData);
+        System.out.println(reUser);
+    }
+
+    public void testDeserialize() throws Exception {
+
+    }
+
+    public void testSerializeToFile() throws Exception {
+        User user = createSimpleUser();
+        ClassUtils.serializeToFile(user,new File("E:/tmp/obj"));
+    }
+
+    public void testDeserializeFromFile() throws Exception {
+        System.out.println(ClassUtils.deserializeFromFile(new File("E:/tmp/obj")));
+    }
+
+    public void testGetFields() throws Exception {
+
+    }
+
+
+    public void testGetInvokeClassName() throws Exception {
+
+    }
+
+    public void testGetInvokeMethodName() throws Exception {
+
+    }
+
+    public void testGetInvokeLineNumber() throws Exception {
+
     }
 }
