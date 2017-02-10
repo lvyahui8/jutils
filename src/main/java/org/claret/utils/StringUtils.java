@@ -16,6 +16,10 @@ import java.util.Map;
 @SuppressWarnings("unused")
 public class StringUtils extends CommonUtils {
 
+    static {
+        System.loadLibrary("string_utils");
+    }
+
     /**
      * 蛇形字符串缓存
      */
@@ -397,4 +401,8 @@ public class StringUtils extends CommonUtils {
         }
         return str;
     }
+
+    public static native String ltrim(String str,String chars);
+
+    public static native String rtrim(String str,String chars);
 }
