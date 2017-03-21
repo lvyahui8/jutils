@@ -439,7 +439,7 @@ public class IOUtils extends CommonUtils {
                 if(length != -1 && lintPoint - offset > length){
                     break;
                 }
-                if(line.trim().equals("")){
+                if( ! line.trim().equals("")){
                     list.add(line);
                 }
             }
