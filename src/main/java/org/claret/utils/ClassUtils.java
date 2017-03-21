@@ -118,16 +118,12 @@ public class ClassUtils extends CommonUtils {
      * @param obj 待序列化对象
      * @return 序列化数据
      */
-    public static byte [] serialize(Object obj){
+    public static byte [] serialize(Object obj) throws IOException{
         ByteArrayOutputStream objBytes = new ByteArrayOutputStream();
-        try {
-            ObjectOutputStream out = new ObjectOutputStream(objBytes);
-            out.writeObject(obj);
-            return objBytes.toByteArray();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+
+        ObjectOutputStream out = new ObjectOutputStream(objBytes);
+        out.writeObject(obj);
+        return objBytes.toByteArray();
     }
 
     /**
@@ -173,19 +169,15 @@ public class ClassUtils extends CommonUtils {
      * @param data 序列化数据
      * @return 反序列化对象
      */
-    public static Object deserialize(byte [] data){
+    public static Object deserialize(byte [] data) throws IOException,ClassNotFoundException{
         if(data == null){
             return null;
         }
         ByteArrayInputStream bin = new ByteArrayInputStream(data);
-        try
-        {
-            ObjectInputStream obin = new ObjectInputStream(bin);
-            return obin.readObject();
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+
+        ObjectInputStream obin = new ObjectInputStream(bin);
+        return obin.readObject();
+
     }
 
     /**
@@ -193,7 +185,7 @@ public class ClassUtils extends CommonUtils {
      * @param file 序列化数据文件
      * @return 反序列化对象
      */
-    public static Object deserializeFromFile(File file) throws IOException{
+    public static Object deserializeFromFile(File file) throws IOException,ClassNotFoundException{
         BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(file));
         byte [] data = new byte[4096];
         int len;
