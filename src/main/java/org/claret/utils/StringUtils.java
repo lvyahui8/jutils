@@ -17,7 +17,7 @@ import java.util.Map;
 public class StringUtils extends CommonUtils {
 
     static {
-        System.loadLibrary("string_utils");
+        //System.loadLibrary("string_utils");
     }
 
     /**
@@ -400,6 +400,19 @@ public class StringUtils extends CommonUtils {
             str = str.replaceAll(match,replace);
         }
         return str;
+    }
+
+    public static boolean contains(String str,String search,String dim){
+        String [] strs = str.split(dim);
+        if(strs.length == 0){
+            return false;
+        }
+        for (String item: strs) {
+            if(item != null && item.trim().equals(search)){
+                return true;
+            }
+        }
+        return false;
     }
 
     public static native String ltrim(String str,String chars);

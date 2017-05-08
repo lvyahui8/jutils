@@ -157,4 +157,9 @@ public class StringUtilsTest extends TestCase {
 
         System.err.println(str);
     }
+
+    public void testContains() throws Exception {
+        System.out.println(StringUtils.contains("sam;kel;den,jel","sa","[;,]"));
+        System.out.println(StringUtils.contains("sam;kel;den,jel","sam","[;,]"));
+    }
 }
