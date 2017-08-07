@@ -85,4 +85,11 @@ public class NetUtilsTest extends TestCase {
         bodyBuild.deleteCharAt(bodyBuild.length() - 1);
         System.out.println(bodyBuild.toString());
     }
+
+
+    public void testTime() throws Exception{
+        long start = System.currentTimeMillis();
+        NetUtils.get("http://100.66.106.155/task/schedule/sleep?s=200");
+        System.out.println((System.currentTimeMillis() - start) / 1000);
+    }
 }
