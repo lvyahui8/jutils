@@ -164,7 +164,18 @@ public class StringUtilsTest extends TestCase {
     }
 
     public void testLtrim() throws Exception {
-        System.out.println(StringUtils.ltrim("lvyahui","lv"));
+        long time = System.currentTimeMillis();
+        int n = 10000000;
+        for (int i = 0 ; i < n; i ++){
+            StringUtils.ltrim("lvyahui","lv");
+        }
+        System.out.println("native method cost time :" + (System.currentTimeMillis() - time) + " ms");
+
+        time = System.currentTimeMillis();
+        for (int i = 0 ; i < n ;i ++){
+            org.apache.commons.lang3.StringUtils.strip("lvyahui","lv");
+        }
+        System.out.println("apache common cost time :" + (System.currentTimeMillis() - time) + " ms");
     }
 
     public void testRtrim() throws Exception {
