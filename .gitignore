@@ -35,3 +35,6 @@ bin
 *.log
 .clover
 /dependency-reduced-pom.xml
+
+
+*.obj

@@ -162,4 +162,12 @@ public class StringUtilsTest extends TestCase {
         System.out.println(StringUtils.contains("sam;kel;den,jel","sa","[;,]"));
         System.out.println(StringUtils.contains("sam;kel;den,jel","sam","[;,]"));
     }
+
+    public void testLtrim() throws Exception {
+        System.out.println(StringUtils.ltrim("lvyahui","lv"));
+    }
+
+    public void testRtrim() throws Exception {
+        System.out.println(StringUtils.rtrim("lvyahui","hui"));
+    }
 }

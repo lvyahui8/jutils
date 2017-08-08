@@ -24,9 +24,9 @@ bool is_end_with(const char * str1, const char * str2){
 
 extern "C"
 JNIEXPORT jstring JNICALL Java_org_claret_utils_StringUtils_ltrim
-  (JNIEnv * env, jclass cls, jstring j_str, jstring j_chars){
-    const char * str = env->GetStringUTFChars(j_str, 0);
-    const char * chars = env->GetStringUTFChars(j_chars, 0);
+  (JNIEnv * env, jclass cls, jstring str_, jstring chars_){
+    const char * str = env->GetStringUTFChars(str_, 0);
+    const char * chars = env->GetStringUTFChars(chars_, 0);
 
     size_t chars_len = strlen(chars);
     const char * pCh = str;
@@ -44,9 +44,9 @@ JNIEXPORT jstring JNICALL Java_org_claret_utils_StringUtils_ltrim
 
 extern "C"
 JNIEXPORT jstring JNICALL Java_org_claret_utils_StringUtils_rtrim
-  (JNIEnv * env, jclass cls, jstring j_str, jstring j_chars){
-    const char *str = env->GetStringUTFChars(j_str, 0);
-    const char *chars = env->GetStringUTFChars(j_chars, 0);
+  (JNIEnv * env, jclass cls, jstring str_, jstring chars_){
+    const char *str = env->GetStringUTFChars(str_, 0);
+    const char *chars = env->GetStringUTFChars(chars_, 0);
 
     // TODO
     size_t chars_len = strlen(chars);

@@ -18,6 +18,8 @@ public class StringUtils extends CommonUtils {
 
     static {
         //System.loadLibrary("string_utils");
+        // Can't load IA 32-bit .dll on a AMD 64-bit platform
+        System.load(IOUtils.getRuntimePath() + "/lib/native/win64/jutils_native.dll");
     }
 
     /**
