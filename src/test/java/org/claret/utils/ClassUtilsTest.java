@@ -5,8 +5,10 @@ import org.claret.utils.vo.User;
 
 import java.io.File;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
 
 /**
  * @author samlv
@@ -95,6 +97,9 @@ public class ClassUtilsTest extends TestCase {
     }
 
     public void testGetInvokeLineNumber() throws Exception {
-
+        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Shanghai"));
+        System.out.println(new Date());
+        TimeZone.setDefault(TimeZone.getTimeZone("America/Los_Angeles"));
+        System.out.println(new Date());
     }
 }
