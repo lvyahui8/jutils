@@ -1,7 +1,7 @@
 package org.claret.utils;
 
 import junit.framework.TestCase;
-import org.claret.vo.User;
+import org.claret.utils.vo.User;
 
 import java.io.File;
 import java.sql.Timestamp;
@@ -49,7 +49,7 @@ public class ClassUtilsTest extends TestCase {
     }
 
     public void testGetFieldsAsString() throws Exception {
-        String [] fileds = ClassUtils.getFieldsAsString("org.claret.vo.User");
+        String [] fileds = ClassUtils.getFieldsAsString("org.claret.utils.vo.User");
         for (String field : fileds){
             System.out.println(field);
         }
@@ -57,7 +57,7 @@ public class ClassUtilsTest extends TestCase {
 
 
     public void testLoadClass() throws Exception {
-        System.out.println(ClassUtils.loadClass("org.claret.vo.User"));
+        System.out.println(ClassUtils.loadClass("org.claret.utils.vo.User"));
     }
 
     public void testSerialize() throws Exception {

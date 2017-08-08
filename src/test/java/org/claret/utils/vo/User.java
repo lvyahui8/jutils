@@ -1,4 +1,4 @@
-package org.claret.vo;
+package org.claret.utils.vo;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
