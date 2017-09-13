@@ -65,9 +65,9 @@ public class ShellUtils extends CommonUtils {
         ProcessBuilder builder = new ProcessBuilder(getExecString(cmd));
         builder.redirectErrorStream(true);
         Process process = builder.start();
-
-        final BufferedReader errReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-        final BufferedReader outReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        String encode = osType == OSType.LINUX ? "UTF-8" : "GBK";
+        final BufferedReader errReader = new BufferedReader(new InputStreamReader(process.getErrorStream(),encode));
+        final BufferedReader outReader = new BufferedReader(new InputStreamReader(process.getInputStream(),encode));
 
         final StringBuilder errMsg = new StringBuilder();
         final StringBuilder outMsg = new StringBuilder();
@@ -96,6 +96,7 @@ public class ShellUtils extends CommonUtils {
             int exitCode = process.waitFor();
             if(exitCode != 0){
                 // 执行出错
+                throw new IOException(outMsg.toString());
             }
         } catch (InterruptedException e) {
             e.printStackTrace();

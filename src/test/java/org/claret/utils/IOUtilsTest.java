@@ -100,4 +100,12 @@ public class IOUtilsTest extends TestCase {
         }
         IOUtils.removeFile(distFile.getAbsolutePath());
     }
+
+    public void testRemoveFile() throws Exception {
+
+    }
+
+    public void testRemoveFileByCommand() throws Exception {
+        IOUtils.removeFileByCommand(IOUtils.getRuntimePath()+"\\target");
+    }
 }

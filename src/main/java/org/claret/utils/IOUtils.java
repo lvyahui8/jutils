@@ -323,6 +323,35 @@ public class IOUtils extends CommonUtils {
         return success && path.delete();
     }
 
+    public static boolean removeFileByCommand(String fileName){
+        ShellUtils.OSType osType = ShellUtils.getOsType();
+        File file = new File(fileName);
+        if (! file.exists()) return false;
+        try {
+            if (osType == ShellUtils.OSType.LINUX){
+                ShellUtils.execCommand("rm","-fr",file.getAbsolutePath());
+            } else if (osType == ShellUtils.OSType.WINDOWS){
+                if (file.isDirectory()){
+                    ShellUtils.execCommand("rd","/s","/q",file.getAbsolutePath());
+                } else {
+                    ShellUtils.execCommand("del","/f","/q",file.getAbsolutePath());
+                }
+            }
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+            // try {
+            //     String iso = new String(e.getMessage().getBytes("UTF-8"),"ISO-8859-1");
+            //     String utf8 =new String(iso.getBytes("ISO-8859-1"),"UTF-8");
+            //     logger.error(utf8);
+            // } catch (UnsupportedEncodingException e1) {
+            //     e1.printStackTrace();
+            // }
+
+            return false;
+        }
+        return true;
+    }
+
     /**
      * 移动文件，如果目标文件存在则覆盖
      *
