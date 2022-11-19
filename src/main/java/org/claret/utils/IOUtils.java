@@ -4,6 +4,7 @@ import java.io.*;
 import java.math.BigInteger;
 import java.net.URL;
 import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
@@ -99,7 +100,7 @@ public class IOUtils extends CommonUtils {
     public static String getSerialNumber(String drive) {
         String result = "";
         try {
-            File file = File.createTempFile("realhowto", ".vbs");
+            File file = Files.createTempFile("realhowto",".vbs").toFile();
             file.deleteOnExit();
             FileWriter fw = new java.io.FileWriter(file);
 
